@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Volt Berlin – Wahlkarte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="darkmode.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>  
+  <script src="darkmode.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script type="module" src="map.js"></script>
+
+  <meta property="og:title" content="Volt Berlin – Unterstützungsunterschriften" />
+  <meta property="og:description" content="Wie viele Unterschriften wurden schon gesammelt? Jetzt Wahlkreis finden und mithelfen!" />
+  <meta property="og:image" content="https://voltdeutschland.org/storage/assets-schleswig-holstein/images/header-images/volt_schleswig-holstein.jpg" />
+  <meta property="og:url" content="https://volt-tools.github.io/berlin-uu/" />
+  <meta property="og:type" content="website" />
+  
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Volt Berlin – Unterstützungsunterschriften" />
+  <meta name="twitter:description" content="Wie viele Unterschriften wurden schon gesammelt? Jetzt Wahlkreis finden und mithelfen!" />
+  <meta name="twitter:image" content="https://voltdeutschland.org/storage/assets-schleswig-holstein/images/header-images/volt_schleswig-holstein.jpg" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <button id="find-me" type="button" aria-label="Aktuellen Standort anzeigen">📍 Wo bin ich</button>
+
+  <select id="wahlkreis-filter" class="desktop-only" title="Wahlkreis auswählen">
+    <option value="">🔎 Wahlkreis auswählen</option>
+  </select>
+
+  <div class="landesliste-container">
+    <a href="https://voltdeutschland.org/berlin" target="_blank" rel="noopener">
+      <img src="Volt Logo Purple.png" alt="Volt Logo" class="volt-logo" id="volt-logo">
+    </a>
+    <div id="landesliste-counter" class="landesliste-counter">
+      <div id="landesliste-short">Landesliste: …</div>
+      <div id="landesliste-collected" class="landesliste-collected"></div>
+      <small id="landesliste-detail">Für die Landesliste benötigen wir zusätzlich Unterschriften.<br>Ziel: <strong>3000</strong></small>
+        <div id="ll-progress" class="ll-progress" role="progressbar"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+             aria-valuetext="0 Prozent erreicht">
+          <div class="ll-progress-bar" id="ll-progress-bar">
+            <span id="ll-progress-label">0%</span>
+          </div>
+        </div>
+        
+        <p id="landesliste-deadline" class="ll-deadline-inline">🗓️ Frist: wird geladen …</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3 id="legend-title">Unterschriften</h3>
+    <p class="legend-sub">Grün = Ziel erreicht</p>
+  
+    <div class="legend-bar"></div>
+    <div class="legend-scale"><span>0</span><span>30</span><span>60</span></div>
+  
+    <div class="legend-facts">
+      <p><strong>Ziel:</strong> 60 je Wahlkreis, zusätzlich Landesliste</p>
+      <p><strong>Warum?</strong> Unterstützungsunterschriften sind gesetzlich nötig, damit Volt auf dem Wahlzettel steht.</p>
+    </div>
+  
+    <p id="timestamp" class="legend-meta">Stand: wird geladen …</p>
+  
+    <p class="legend-links">
+      <a href="https://voltdeutschland.org/berlin/unterstuetzungsunterschriften-agh-2026" target="_blank" rel="noopener">Mehr Infos</a>
+      <a href="mailto:unterschriften@voltberlin.org" target="_blank" rel="noopener">Unterschriften-Kontakt</a>
+      <a href="mailto:niclas.rauch@volteuropa.org" target="_blank" rel="noopener">Webseite-Feedback</a>
+    </p>
+  </div>
+
+  <div id="search-box" class="desktop-only">
+    <label for="address-input"><strong>Adresse eingeben</strong></label>
+    <input type="text" id="address-input" placeholder="Adresse (Straße, Ort, PLZ)" autocomplete="off" />
+    <div id="desktop-feedback" class="desktop-feedback" aria-live="polite"></div>
+    <div id="address-suggestion-box" class="suggestions-box"></div>
+    <button id="clear-marker" onclick="clearMarker()">Markierung entfernen</button>
+  </div>
+
+  <div class="footer-links">
+    <a href="https://voltdeutschland.org/berlin/impressum" target="_blank">Impressum</a> |
+    <a href="https://voltdeutschland.org/datenschutz" target="_blank">Datenschutz</a>
+  </div>
+
+  <div class="footer-note">
+    Keine Cookies. Keine Datenspeicherung.
+  </div>
+
+  <div id="fab-container" class="mobile-only">
+    <button id="fab-main" type="button">☰</button>
+    <div id="fab-menu">
+      <div class="fab-section" id="fab-location">
+        <button onclick="document.getElementById('find-me').click()" type="button">📍 Wo bin ich</button>
+      </div>
+      <div class="fab-section" id="fab-address">
+        <input type="text" id="fab-address-input" placeholder="Adresse (Straße, Ort, PLZ)" list="fab-suggestions" />
+        <div id="fab-feedback" class="fab-feedback" aria-live="polite"></div>
+        <datalist id="fab-suggestions"></datalist>
+        <button onclick="clearMarker()" type="button">Markierung entfernen</button>
+      </div>
+      <div class="fab-section" id="fab-legend">
+        <h3>Unterschriften</h3>
+        <p class="legend-sub">Grün = Ziel erreicht</p>
+        <div class="legend-bar"></div>
+        <div class="flex-between"><span>0</span><span>30</span><span>60</span></div>
+        <div class="legend-facts">
+          <p><strong>Ziel:</strong>60 je Wahlkreis, zusätzlich Landes- und Bezirksliste</p>
+          <p><strong>Warum?</strong> Unterstützungsunterschriften sind gesetzlich nötig, damit Volt auf dem Wahlzettel steht.</p>
+        </div>
+        <p id="fab-timestamp" class="legend-meta">Stand: wird geladen …</p>
+        <p class="legend-links">
+          <a href="https://voltdeutschland.org/berlin/unterstuetzungsunterschriften-agh-2026" target="_blank" rel="noopener">Mehr Infos</a>
+          <a href="mailto:unterschriften@voltberlin.org">Unterschriften-Kontakt</a> 
+          <a href="mailto:niclas.rauch@volteuropa.org">Webseite-Feedback</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="overlay-message" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="overlay-text">
+  <div class="overlay-content">
+    <p id="overlay-text"></p>
+    <button id="overlay-close" type="button">OK</button>
+  </div>
+</div>
+<div id="loading-backdrop" class="loading-backdrop hidden" aria-hidden="true"></div>
+<div id="loading-spinner" class="loading-spinner hidden" aria-live="polite"></div>
+<div id="sr-live" aria-live="polite" class="visually-hidden"></div>
+<div id="rotate-overlay" class="rotate-overlay" aria-live="polite" aria-hidden="true">
+  <img id="rotate-logo" src="Volt Logo_white.png" alt="Volt Logo" />
+  <p id="rotate-msg">…</p>
+</div>
+</body>
+</html>
