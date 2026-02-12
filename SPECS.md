@@ -33,5 +33,3 @@
 
 - Should be able to write a markdown article with metadata without having to worry about how it'll appear on the map
 - 1-3 members
-
-### CoCo Members (?)
