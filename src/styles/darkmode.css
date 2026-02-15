@@ -1,0 +1,63 @@
+html[data-theme="dark"]{
+  --app-bg: #502379;
+  --app-content-bg: #502379;
+  --app-border-color: #000;
+
+  --text-color: #fff;
+  --text-inverse-color: #502379;
+
+  --bar-selected-color: #FDC220;
+  --bar-text-color: #000;
+
+  --input-bg: #502379;
+  --input-border: #fff;
+  --input-text-color: #fff;
+
+  --hover-bg: rgba(255,255,255,0.10);
+  --footer-bg: rgba(0,0,0,0.40);
+  --footer-border: rgba(255,255,255,0.16);
+  --footer-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  --footer-blur: 10px;
+
+  --focus-color: #fff;
+
+  --spinner-track: rgba(255,255,255,0.25);
+  --spinner-scrim: rgba(0,0,0,0.38);
+}
+
+html[data-theme="dark"] ::placeholder{ color: #ccc; }
+
+html[data-theme="dark"] a{ color: var(--bar-selected-color); }
+
+html[data-theme="dark"] .leaflet-bar a,
+html[data-theme="dark"] .overlay-topleft button{
+  background: var(--app-bg);
+  color: var(--text-color);
+  box-shadow: 0 0 4px rgba(255,255,255,0.10);
+}
+
+html[data-theme="dark"] .leaflet-bar a:hover,
+html[data-theme="dark"] .overlay-topleft button:hover{
+  background: #3a1d55;
+}
+
+body, input, select, button{
+  transition: background-color .5s ease, color .5s ease, border-color .5s ease;
+}
+
+html[data-theme="dark"] .app-footer__links a{
+  color: var(--bar-selected-color);
+}
+
+html[data-theme="dark"] .app-footer__links{
+  border-right: 1px solid rgba(255,255,255,0.18);
+}
+
+html[data-theme="dark"] .app-footer__note{
+  opacity: 0.85;
+}
+
+.app-footer__links a:focus-visible{
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}

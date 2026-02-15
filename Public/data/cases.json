@@ -1,0 +1,19 @@
+[
+  {
+    "id": "helsinki-digital-service",
+    "lang": "de",
+    "title": "Digitale Bürgerdienste Helsinki",
+    "short": "Zentrale Plattform für kommunale Services.",
+    "categories": ["digitalisierung", "buergerdienste"],
+    "score": 52,
+    "url": "https://example.org/helsinki",
+    "locations": [
+      {
+        "lat": 60.1699,
+        "lon": 24.9384,
+        "label": "Helsinki"
+      }
+    ],
+    "updated": "2025-02-10"
+  }
+]
