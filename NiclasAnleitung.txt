@@ -1,0 +1,14 @@
+bei VSCode Start:
+(1. 
+bundle install)
+2. 
+bundle exec jekyll serve
+
+
+NUR AB HIER
+React Server start (vite, react, leaflet, i18n etc)
+1. npm run dev
+
+
+
+
