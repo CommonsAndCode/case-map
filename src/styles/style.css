@@ -1,20 +1,20 @@
 @font-face{
   font-family: "Share Tech";
-  src: url("./fonts/ShareTech-Regular.ttf") format("truetype");
+  src: url("case-map/fonts/ShareTech-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face{
   font-family: "Share Tech Mono";
-  src: url("./fonts/ShareTechMono-Regular.ttf") format("truetype");
+  src: url("case-map/fonts/ShareTechMono-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face{
   font-family: "Raleway";
-  src: url("./fonts/Raleway-VariableFont_wght.ttf") format("truetype");
+  src: url("case-map/fonts/Raleway-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -848,4 +848,5 @@ html[data-colorblind="1"]{
     width: 44px;
     height: 44px;
   }
+
 }
