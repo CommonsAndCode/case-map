@@ -1,4 +1,4 @@
-// src/App.tsx (Änderungen)
+// src/App.tsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import "./styles/style.css";
@@ -13,6 +13,7 @@ import { Footer } from "./components/footer.tsx";
 import { getInitialTheme, applyTheme } from "./app/theme.ts";
 import type { Theme } from "./app/theme.ts";
 import type { CaseEntry } from "./app/types.ts";
+import { useConfig } from "./app/ConfigContext.tsx";
 
 import "./app/i18n.ts";
 
@@ -26,11 +27,14 @@ import {
 type MapApi = { recenter: () => void };
 
 export default function App() {
-  const { t } = useTranslation();
+  const config = useConfig();
+  const { t, i18n } = useTranslation();
   const [cases, setCases] = useState<CaseEntry[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const [theme, setTheme] = useState<Theme>(getInitialTheme());
+  const [theme, setTheme] = useState<Theme>(
+    getInitialTheme(config.theme ?? undefined)
+  );
   const [colorblind, setColorblind] = useState(false);
 
   const [filter, setFilter] = useState<CaseFilterState>(DEFAULT_FILTER);
@@ -40,18 +44,35 @@ export default function App() {
 
   const mapApiRef = useRef<MapApi | null>(null);
 
+  // Apply language override from config on mount
   useEffect(() => {
-    applyTheme(theme);
+    if (config.lang) {
+      i18n.changeLanguage(config.lang);
+    }
+  }, [config.lang, i18n]);
+
+  // Apply primary colour override from config
+  useEffect(() => {
+    if (config.primaryColor) {
+      document.documentElement.style.setProperty(
+        "--cc-primary",
+        config.primaryColor
+      );
+    }
+  }, [config.primaryColor]);
+
+  useEffect(() => {
+    applyTheme(theme, config.theme != null);
     document.documentElement.setAttribute(
       "data-colorblind",
       colorblind ? "1" : "0"
     );
-  }, [theme, colorblind]);
+  }, [theme, colorblind, config.theme]);
 
   useEffect(() => {
     let mounted = true;
 
-    fetch(`${import.meta.env.BASE_URL}data/cases.json`)
+    fetch(config.dataUrl)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -71,7 +92,7 @@ export default function App() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [config.dataUrl]);
 
   const filteredCases = useMemo(() => applyCaseFilter(cases, filter), [cases, filter]);
 
@@ -102,6 +123,7 @@ export default function App() {
             colorblind={colorblind}
             onToggleColorblind={() => setColorblind((v) => !v)}
             onRecenter={() => mapApiRef.current?.recenter()}
+            showThemeToggle={config.showThemeToggle}
           />
         }
       />
@@ -112,14 +134,17 @@ export default function App() {
         cases={filteredCases}
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
-        logoUrl={`${import.meta.env.BASE_URL}img/logo.svg`}
-        logoLink="https://commons-and-code.eu/de/"
+        logoUrl={config.logoUrl}
+        logoLink={config.logoLink}
+        showLogo={config.showLogo}
       />
 
-      <Footer
-        privacyUrl="https://commons-and-code.eu/en/legal/privacy/"
-        imprintUrl="https://commons-and-code.eu/en/legal/imprint/"
-      />
+      {config.showFooter && (
+        <Footer
+          privacyUrl={config.privacyUrl}
+          imprintUrl={config.imprintUrl}
+        />
+      )}
 
       {loading && (
         <>
