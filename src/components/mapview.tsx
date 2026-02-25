@@ -5,6 +5,7 @@ import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import type { LatLngBoundsExpression } from "leaflet";
 
 import type { CaseEntry } from "../app/types";
+import { lightTile, darkTile } from "../map/tiles";
 import { buildIndex } from "../map/cluster";
 import type { ClusterIndex, MapItem, BBox } from "../map/cluster";
 import { CaseMarker, ClusterMarker } from "../map/markers";
@@ -185,9 +186,7 @@ export function MapView({
   const index = useMemo(() => buildIndex(cases), [cases]);
   const [items, setItems] = useState<MapItem[]>([]);
 
-  const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  const darkUrl =
-    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+  const tile = theme === "dark" ? darkTile : lightTile;
 
   return (
     <MapContainer
@@ -204,12 +203,8 @@ export function MapView({
       <MapApiBridge onMapReady={onMapReady} bounds={EUROPE_BOUNDS} />
 
       <TileLayer
-        url={theme === "dark" ? darkUrl : lightUrl}
-        attribution={
-          theme === "dark"
-            ? '&copy; OpenStreetMap-Mitwirkende, &copy; <a href="https://carto.com/">CARTO</a>'
-            : "&copy; OpenStreetMap-Mitwirkende"
-        }
+        url={tile.url}
+        attribution={tile.attribution}
       />
 
       {topLeftControls ? (
