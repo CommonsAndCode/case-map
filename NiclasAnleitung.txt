@@ -11,4 +11,27 @@ React Server start (vite, react, leaflet, i18n etc)
 
 
 
+---
+
+Änderungen am Build (Februar 2026):
+
+- vite.config.ts: `base` ist jetzt über die Umgebungsvariable VITE_BASE_PATH steuerbar.
+  Standard ist `/`, für GitHub Pages wird `/case-map/` in der GHA-Workflow gesetzt.
+  Vorher war `/case-map/` fest eingetragen, was dazu geführt hat, dass `npm run build`
+  lokal eine leere Seite erzeugt hat (Browser sucht Assets unter /case-map/, findet nichts).
+
+- style.css: Font-Pfade von `/case-map/fonts/...` auf `/fonts/...` geändert.
+  Vite setzt den base-Pfad beim Build automatisch davor.
+
+- index.html: Favicon-Pfad korrigiert (./public/vite.svg → /vite.svg).
+
+- Dockerfile + nginx.conf hinzugefügt: Die Karte wird jetzt als Container
+  hinter nginx ausgeliefert und läuft unter map.commons-and-code.eu.
+  Embedding per iframe ist nur von commons-and-code.eu und den PR-Preview-Domains erlaubt.
+
+- GHA-Workflow für Docker-Build hinzugefügt (.github/workflows/docker-build.yml).
+  Pusht das Image nach ghcr.io/commonsandcode/case-map.
+
+
+
 
