@@ -1,4 +1,4 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import type { LeafletMouseEventHandlerFn } from "leaflet";
 import { getPointIcon } from "../map/pointIcons.ts";
 import { getClusterIcon } from "../map/clusterIcons.ts";
@@ -8,6 +8,7 @@ type CaseMarkerProps = {
   lon: number;
   title?: string;
   short?: string;
+  url?: string;
   color?: string;
   size?: number;
   onClick?: LeafletMouseEventHandlerFn;
@@ -28,11 +29,11 @@ export function CaseMarker({
       icon={getPointIcon({ color, size })}
       eventHandlers={onClick ? { click: onClick } : undefined}
     >
-      {(title || short) && (
-        <Popup>
-          {title && <strong>{title}</strong>}
-          {short && <div>{short}</div>}
-        </Popup>
+      {title && (
+        <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
+          <strong>{title}</strong>
+          {short && <div style={{ marginTop: 2, fontSize: 13 }}>{short}</div>}
+        </Tooltip>
       )}
     </Marker>
   );
