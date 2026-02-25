@@ -1,14 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { CaseEntry } from "../app/types";
 import { useConfig } from "../app/ConfigContext";
 import { sanitiseUrl } from "../app/config";
-
-function hasScore(
-  c: CaseEntry
-): c is CaseEntry & { score: number } {
-  return typeof c.score === "number";
-}
 
 export function InfoPanel({
   cases,
@@ -21,27 +15,16 @@ export function InfoPanel({
 }) {
   const { t } = useTranslation();
   const { showLogo, logoUrl, logoLink } = useConfig();
-  const [expanded, setExpanded] = useState(false);
 
   const selected = useMemo(
     () => (selectedId ? cases.find((x) => x.id === selectedId) ?? null : null),
     [cases, selectedId]
   );
 
-    const avgScore = useMemo(() => {
-      const validCases = cases.filter(hasScore);
-
-      if (!validCases.length) return 0;
-
-      return Math.round(
-        validCases.reduce((sum, c) => sum + c.score, 0) /
-          validCases.length
-      );
-    }, [cases]);
+  const safeUrl = selected?.url ? sanitiseUrl(selected.url) : null;
 
   return (
     <div className="info-ui">
-
       {showLogo && logoUrl && (
         <a
           href={logoLink ?? "#"}
@@ -49,57 +32,53 @@ export function InfoPanel({
           rel="noopener"
           className="info-ui-logo-link"
         >
-          <img
-            className="info-ui-logo"
-            src={logoUrl}
-            alt="Logo"
-          />
+          <img className="info-ui-logo" src={logoUrl} alt="Logo" />
         </a>
       )}
 
-      <div className={`info-ui-panel ${expanded ? "is-expanded" : ""}`}>
-        <button
-          className="info-ui-toggle"
-          onClick={() => setExpanded((v) => !v)}
-        >
-          {cases.length} {t("cases")} · {t("avgScore")} {avgScore}
-        </button>
+      {selected && (
+        <div className="info-ui-panel is-expanded">
+          <div className="info-ui-content">
+            <h2>{selected.title}</h2>
 
-        <div className="info-ui-content">
+            {selected.rating && (
+              <p className="info-ui-rating" data-rating={selected.rating}>
+                {t(`rating.${selected.rating}`)}
+              </p>
+            )}
 
-          {!selected && (
-            <p>{t("selectMarker")}</p>
-          )}
+            <p>{selected.short}</p>
 
-          {selected && (
-            <>
-              <h2>{selected.title}</h2>
-              <p><strong>{t("score")}:</strong> {selected.score} / 100</p>
-              <p>{selected.short}</p>
+            {selected.categories.length > 0 && (
               <p>
                 <strong>{t("categories")}:</strong>{" "}
                 {selected.categories.join(" · ")}
               </p>
-              <p>
-                <strong>{t("updated")}:</strong> {selected.updated}
-              </p>
-              {sanitiseUrl(selected.url ?? null) && (
-                <a
-                  href={sanitiseUrl(selected.url ?? null)!}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  {t("readFullCase")}
-                </a>
-              )}
-              <div style={{ marginTop: 10 }}>
-                <button onClick={onClose}>{t("close")}</button>
-              </div>
-            </>
-          )}
+            )}
 
+            {selected.updated && (
+              <p className="info-ui-meta">
+                {t("updated")}: {selected.updated}
+              </p>
+            )}
+
+            {safeUrl && (
+              <a
+                className="info-ui-link"
+                href={safeUrl}
+                target="_blank"
+                rel="noopener"
+              >
+                {t("readFullCase")} ↗
+              </a>
+            )}
+
+            <div style={{ marginTop: 10 }}>
+              <button onClick={onClose}>{t("close")}</button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
