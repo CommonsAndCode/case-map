@@ -8,6 +8,13 @@ html[data-theme="dark"]{
   --text-color: #fff;
   --text-inverse-color: #502379;
 
+  /* Rating dot colours (adjusted for dark bg) */
+  --rating-best-practice: #4ade80;
+  --rating-promising: #60a5fa;
+  --rating-flawed-execution: #fbbf24;
+  --rating-cautionary: #f87171;
+  --rating-unrated: #a1a1aa;
+
   --bar-selected-color: #FDC220;
   --bar-text-color: #000;
 
