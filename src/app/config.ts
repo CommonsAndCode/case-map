@@ -69,6 +69,28 @@ const EMBED_DEFAULTS: AppConfig = {
   primaryColor: null,
 };
 
+/**
+ * Reject URLs with dangerous schemes (javascript:, data:, vbscript:, etc.).
+ * Only allows http:, https:, and relative URLs.
+ */
+export function sanitiseUrl(url: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+
+  // Relative URLs (including protocol-relative) are safe
+  if (trimmed.startsWith("/") || trimmed.startsWith(".")) return trimmed;
+
+  try {
+    const parsed = new URL(trimmed, window.location.href);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") return trimmed;
+  } catch {
+    // Malformed URL — reject
+  }
+
+  return null;
+}
+
 function isValidLang(v: string): v is "de" | "en" {
   return v === "de" || v === "en";
 }
@@ -106,18 +128,18 @@ export function parseConfig(search: string): AppConfig {
   const color = params.get("color");
 
   const resolvedLogo = logo ?? defaults.logoUrl;
-  const resolvedImprint = imprintUrl ?? defaults.imprintUrl;
-  const resolvedPrivacy = privacyUrl ?? defaults.privacyUrl;
+  const resolvedImprint = sanitiseUrl(imprintUrl) ?? defaults.imprintUrl;
+  const resolvedPrivacy = sanitiseUrl(privacyUrl) ?? defaults.privacyUrl;
 
   return {
     mode,
-    dataUrl: dataUrl ?? defaults.dataUrl,
+    dataUrl: sanitiseUrl(dataUrl) ?? defaults.dataUrl,
     lang: lang && isValidLang(lang) ? lang : defaults.lang,
     theme: theme && isValidTheme(theme) ? theme : defaults.theme,
     showThemeToggle: defaults.showThemeToggle,
     showLogo: logo ? true : defaults.showLogo,
-    logoUrl: resolvedLogo,
-    logoLink: logoLink ?? defaults.logoLink,
+    logoUrl: sanitiseUrl(resolvedLogo),
+    logoLink: sanitiseUrl(logoLink) ?? defaults.logoLink,
     imprintUrl: resolvedImprint,
     privacyUrl: resolvedPrivacy,
     showFooter: resolvedImprint || resolvedPrivacy ? true : defaults.showFooter,
