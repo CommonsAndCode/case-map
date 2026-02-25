@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { Theme } from "../app/theme";
+import { useConfig } from "../app/ConfigContext";
 
 export function TopLeftControls({
   theme,
@@ -7,16 +8,15 @@ export function TopLeftControls({
   colorblind,
   onToggleColorblind,
   onRecenter,
-  showThemeToggle = true,
 }: {
   theme: Theme;
   onToggleTheme: () => void;
   colorblind: boolean;
   onToggleColorblind: () => void;
   onRecenter: () => void;
-  showThemeToggle?: boolean;
 }) {
   const { t, i18n } = useTranslation();
+  const { showThemeToggle } = useConfig();
   const isDe = i18n.language?.startsWith("de");
 
   return (
