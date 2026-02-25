@@ -33,5 +33,79 @@ React Server start (vite, react, leaflet, i18n etc)
   Pusht das Image nach ghcr.io/commonsandcode/case-map.
 
 
+---
 
+Umbau: Konfigurierbarer Standalone-/Embed-Modus (Februar 2026):
 
+Die Karte funktioniert jetzt sowohl als eigenständige App (map.commons-and-code.eu)
+als auch als eingebetteter iframe. Alles wird über URL-Parameter gesteuert —
+kein Server-State, rein statische Dateien.
+
+Standardmodus ist "standalone" (volle UI mit Logo, Footer, Theme-Toggle).
+Im Embed-Modus (?mode=embed) wird das UI-Chrome ausgeblendet.
+
+Wichtige URL-Parameter:
+  ?mode=embed          Embed-Modus (kein Logo/Footer/Theme-Toggle)
+  ?dataUrl=...         URL zur cases.json (z.B. von der Hugo-Seite)
+  ?lang=de|en          Sprache erzwingen (sonst Browser-Erkennung)
+  ?theme=light|dark    Theme erzwingen (sonst System-Präferenz/localStorage)
+  ?color=#38c0c0       Primärfarbe überschreiben (CSS-Variable --cc-primary)
+  ?logo=...            Logo-Bild-URL (impliziert showLogo=true)
+  ?logoLink=...        Logo-Klick-Ziel
+  ?imprintUrl=...      Impressum-Link (impliziert showFooter=true)
+  ?privacyUrl=...      Datenschutz-Link (impliziert showFooter=true)
+
+Beispiel Standalone:
+  http://localhost:5173/
+  → Volle UI, lokale Daten aus public/data/cases.json
+
+Beispiel Embed:
+  http://localhost:5173/?mode=embed&dataUrl=https://commons-and-code.eu/cases.json&lang=de
+  → Minimale UI, externe Daten, Deutsch
+
+Commits im Einzelnen:
+
+1. 4795ffa – Toter Code aufgeräumt
+   - Stub-Komponenten gelöscht (fabmenu.tsx, overlay.tsx) die nur null zurückgaben
+   - Unbenutzte Dateien entfernt (react.svg, build-data.mjs, content/foo.*.md)
+   - Doppelte TopLeftControls-Darstellung in App.tsx behoben (Bug: Controls
+     wurden sowohl im MapView-Portal als auch standalone gerendert)
+   - Tile-URL-Definitionen konsolidiert: mapview.tsx importiert jetzt aus tiles.ts
+     statt sie inline zu duplizieren
+
+2. 17b0db0 – i18n für alle UI-Texte
+   - Vorher: 3 Übersetzungs-Keys definiert aber nirgends benutzt, alle Texte
+     hardcoded auf Deutsch oder Englisch
+   - Jetzt: Vollständige DE/EN-Übersetzungen für Info-Panel, Filterleiste, Legende,
+     Footer, Controls, Lade-/Fehlerzustände
+   - Alle Komponenten nutzen useTranslation() statt hardcodierter Strings
+   - Sprachumschalter (DE/EN-Button) aktualisiert jetzt tatsächlich alle Texte
+
+3. 1e6dbb5 – AppConfig-Typ und URL-Parameter-Parsing
+   - Neues Modul src/app/config.ts mit AppConfig-Interface
+   - parseConfig() liest URLSearchParams und wendet modusspezifische Defaults an
+   - Standalone-Defaults: alles sichtbar, lokale Daten
+   - Embed-Defaults: Chrome ausgeblendet, dataUrl erwartet
+
+4. 4059da8 – React ConfigContext
+   - ConfigProvider und useConfig()-Hook in src/app/ConfigContext.tsx
+   - Parst URL-Parameter einmalig beim Mount, Konfiguration ist danach unveränderlich
+   - <App> wird in <ConfigProvider> gewrappt (in main.tsx)
+
+5. f2f0561 – Config in Datenladen, Theme und i18n verdrahtet
+   - App.tsx nutzt config.dataUrl statt hardcodiertem Pfad
+   - config.theme überschreibt localStorage/System-Präferenz
+   - config.lang setzt i18n-Sprache beim Start
+   - config.primaryColor wird als CSS-Variable --cc-primary gesetzt
+   - theme.ts: getInitialTheme() akzeptiert optionalen Override,
+     applyTheme() kann localStorage-Schreiben überspringen
+
+6. a814914 – Components lesen Config direkt via useConfig()
+   - Footer, InfoPanel, TopLeftControls rufen useConfig() selbst auf
+     statt Config-Werte als Props von App.tsx zu empfangen
+   - Weniger Prop-Drilling, Komponenten sind eigenständig
+
+7. 4b141fe – CSS-Variable --cc-primary für Primärfarbe
+   - Neue Variable --cc-primary in :root (blau) und dark-theme (gold)
+   - Cluster-Bubbles und Punkt-Marker nutzen --cc-primary
+   - Externe Einbetter können die Akzentfarbe per ?color=... überschreiben
