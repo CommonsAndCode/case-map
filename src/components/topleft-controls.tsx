@@ -5,40 +5,28 @@ import { useConfig } from "../app/ConfigContext";
 export function TopLeftControls({
   theme,
   onToggleTheme,
-  colorblind,
-  onToggleColorblind,
   onRecenter,
 }: {
   theme: Theme;
   onToggleTheme: () => void;
-  colorblind: boolean;
-  onToggleColorblind: () => void;
   onRecenter: () => void;
 }) {
   const { t, i18n } = useTranslation();
-  const { showThemeToggle } = useConfig();
+  const { showThemeToggle, showLanguageToggle } = useConfig();
   const isDe = i18n.language?.startsWith("de");
 
   return (
     <div className="leaflet-control leaflet-bar topleft-controls" role="group" aria-label="Map controls">
-      <button
-        type="button"
-        onClick={() => i18n.changeLanguage(isDe ? "en" : "de")}
-        aria-label={isDe ? t("switchToEn") : t("switchToDe")}
-        title={isDe ? t("langLabelDe") : t("langLabelEn")}
-      >
-        {isDe ? "DE" : "EN"}
-      </button>
-
-      <button
-        type="button"
-        onClick={onToggleColorblind}
-        aria-pressed={colorblind}
-        aria-label={colorblind ? t("colorblindOn") : t("colorblindOff")}
-        title="Colorblind"
-      >
-        CB
-      </button>
+      {showLanguageToggle && (
+        <button
+          type="button"
+          onClick={() => i18n.changeLanguage(isDe ? "en" : "de")}
+          aria-label={isDe ? t("switchToEn") : t("switchToDe")}
+          title={isDe ? t("langLabelDe") : t("langLabelEn")}
+        >
+          {isDe ? "DE" : "EN"}
+        </button>
+      )}
 
       <button
         type="button"
