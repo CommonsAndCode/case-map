@@ -1,4 +1,6 @@
 html[data-theme="dark"]{
+  --cc-primary: #FDC220;
+
   --app-bg: #502379;
   --app-content-bg: #502379;
   --app-border-color: #000;
