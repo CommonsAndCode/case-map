@@ -1,1 +1,41 @@
-[{"categories":["digitalisierung","buergerdienste"],"id":"helsinki-digital-service","lang":"de","locations":[{"label":"Helsinki","lat":60.1699,"lon":24.9384}],"score":50,"short":"Zentrale Plattform für kommunale Services.","title":"Digitale Bürgerdienste Helsinki","updated":"2026-02-25T00:00:00Z","url":"https://commons-and-code.eu/de/fallbeispiele/helsinki-digital-services/"},{"categories":["freiheitsrechte"],"id":"kameras-stoppen","lang":"de","locations":[{"label":"Köln","lat":50.937053892265546,"lon":6.9615089881495855}],"score":50,"short":"Wie eine Kölner Bürger*inneninitiative die polizeiliche Videoüberwachung vor Gericht erfolgreich herausfordert.","title":"Kameras Stoppen","updated":"2026-02-12T00:00:00Z","url":"https://commons-and-code.eu/de/fallbeispiele/kameras-stoppen/"}]
+[
+  {
+    "categories": [
+      "digitalisierung",
+      "buergerdienste"
+    ],
+    "id": "helsinki-digital-service",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Helsinki",
+        "lat": 60.1699,
+        "lon": 24.9384
+      }
+    ],
+    "score": 50,
+    "short": "Zentrale Plattform für kommunale Services.",
+    "title": "Digitale Bürgerdienste Helsinki",
+    "updated": "2026-02-25T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/helsinki-digital-services/"
+  },
+  {
+    "categories": [
+      "freiheitsrechte"
+    ],
+    "id": "kameras-stoppen",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Köln",
+        "lat": 50.937053892265546,
+        "lon": 6.9615089881495855
+      }
+    ],
+    "score": 50,
+    "short": "Wie eine Kölner Bürger*inneninitiative die polizeiliche Videoüberwachung vor Gericht erfolgreich herausfordert.",
+    "title": "Kameras Stoppen",
+    "updated": "2026-02-12T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/kameras-stoppen/"
+  }
+]
