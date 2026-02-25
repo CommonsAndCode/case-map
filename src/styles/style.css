@@ -41,6 +41,8 @@
   --focus-color: #000;
   --hover-bg: rgba(0,0,0,0.05);
 
+  --cc-primary: #2a6df4;
+
   --accent: #111;
   --bar-selected-color: var(--accent);
   --bar-text-color: #fff;
@@ -417,7 +419,7 @@ html[data-colorblind="1"]{
   height: var(--dot);
   display: block;
   border-radius: 999px;
-  background: var(--c);
+  background: var(--c, var(--cc-primary));
   box-shadow: 0 2px 8px rgba(0,0,0,.25);
   border: 2px solid rgba(255,255,255,.9);
 }
@@ -432,7 +434,7 @@ html[data-colorblind="1"]{
   place-items: center;
   font-weight: 700;
   color: #fff;
-  background: rgba(42,109,244,.92);
+  background: var(--cc-primary, rgba(42,109,244,.92));
   border: 2px solid rgba(255,255,255,.9);
   box-shadow: 0 6px 18px rgba(0,0,0,.25);
 }
