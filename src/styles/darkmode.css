@@ -63,3 +63,33 @@ html[data-theme="dark"] .app-footer__note{
   outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
+
+html[data-theme="dark"] .info-ui-rating[data-rating="best-practice"]{
+  background: #1b4332;
+  color: #95d5b2;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="promising"]{
+  background: #1a3a5c;
+  color: #a2d2ff;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="flawed-execution"]{
+  background: #5c4a1e;
+  color: #ffd166;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="cautionary"]{
+  background: #5c1a1a;
+  color: #ffa8a8;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="unrated"]{
+  background: #3a3a3a;
+  color: #ccc;
+}
+
+html[data-theme="dark"] .category-filter__chip.is-active{
+  background: var(--cc-primary);
+  color: #000;
+}
