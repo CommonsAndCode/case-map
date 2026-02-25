@@ -123,7 +123,6 @@ export default function App() {
             colorblind={colorblind}
             onToggleColorblind={() => setColorblind((v) => !v)}
             onRecenter={() => mapApiRef.current?.recenter()}
-            showThemeToggle={config.showThemeToggle}
           />
         }
       />
@@ -134,17 +133,9 @@ export default function App() {
         cases={filteredCases}
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
-        logoUrl={config.logoUrl}
-        logoLink={config.logoLink}
-        showLogo={config.showLogo}
       />
 
-      {config.showFooter && (
-        <Footer
-          privacyUrl={config.privacyUrl}
-          imprintUrl={config.imprintUrl}
-        />
-      )}
+      {config.showFooter && <Footer />}
 
       {loading && (
         <>

@@ -1,13 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { useConfig } from "../app/ConfigContext";
 
-export function Footer({
-  privacyUrl,
-  imprintUrl,
-}: {
-  privacyUrl?: string | null;
-  imprintUrl?: string | null;
-}) {
+export function Footer() {
   const { t } = useTranslation();
+  const { privacyUrl, imprintUrl } = useConfig();
 
   const hasLinks = privacyUrl || imprintUrl;
 

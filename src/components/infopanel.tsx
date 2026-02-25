@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CaseEntry } from "../app/types";
+import { useConfig } from "../app/ConfigContext";
 
 function hasScore(
   c: CaseEntry
@@ -12,18 +13,13 @@ export function InfoPanel({
   cases,
   selectedId,
   onClose,
-  logoUrl,
-  logoLink,
-  showLogo = true,
 }: {
   cases: CaseEntry[];
   selectedId: string | null;
   onClose: () => void;
-  logoUrl?: string | null;
-  logoLink?: string | null;
-  showLogo?: boolean;
 }) {
   const { t } = useTranslation();
+  const { showLogo, logoUrl, logoLink } = useConfig();
   const [expanded, setExpanded] = useState(false);
 
   const selected = useMemo(
