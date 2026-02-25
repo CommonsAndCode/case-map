@@ -91,7 +91,7 @@
     "short": "Online-Plattform zur Beteiligung der Bevölkerung an der kommunalen Haushaltsplanung.",
     "categories": ["buergerbeteiligung", "transparenz"],
     "rating": "promising",
-    "locations": [{ "lat": 51.9607, "lon": 7.6261, "label": "Münster" }],
+    "locations": [{ "lat": 51.9625, "lon": 7.6290, "label": "Münster" }],
     "updated": "2026-01-28"
   },
   {
@@ -101,7 +101,7 @@
     "short": "Automatisierte Vorprüfung von Bauanträgen mittels maschinellem Lernen.",
     "categories": ["ki", "digitalisierung", "buergerdienste"],
     "rating": "promising",
-    "locations": [{ "lat": 53.5511, "lon": 9.9937, "label": "Hamburg" }],
+    "locations": [{ "lat": 53.5530, "lon": 9.9900, "label": "Hamburg" }],
     "updated": "2026-02-14"
   },
   {
@@ -112,7 +112,7 @@
     "categories": ["ueberwachung", "ki", "freiheitsrechte"],
     "rating": "cautionary",
     "locations": [
-      { "lat": 50.9375, "lon": 6.9603, "label": "Köln" },
+      { "lat": 50.9390, "lon": 6.9580, "label": "Köln" },
       { "lat": 51.2277, "lon": 6.7735, "label": "Düsseldorf" }
     ],
     "updated": "2025-10-05"
@@ -124,8 +124,7 @@
     "short": "Die Verkehrsverwaltung nutzt offene Geodaten für die Planung neuer Fahrradinfrastruktur.",
     "categories": ["open-data", "verkehr", "open-source"],
     "rating": "best-practice",
-    "locations": [{ "lat": 52.5200, "lon": 13.4050, "label": "Berlin" }],
-    "updated": "2026-01-20"
+    "locations": [{ "lat": 52.5165, "lon": 13.3890, "label": "Berlin" }],
   },
   {
     "id": "test-e-government-tallinn",
@@ -181,7 +180,7 @@
     "short": "Alle Verträge, Gutachten und Senatsbeschlüsse der Stadt frei zugänglich online.",
     "categories": ["transparenz", "open-data"],
     "rating": "best-practice",
-    "locations": [{ "lat": 53.5511, "lon": 9.9937, "label": "Hamburg" }],
+    "locations": [{ "lat": 53.5490, "lon": 9.9970, "label": "Hamburg" }],
     "updated": "2025-12-01"
   },
   {
