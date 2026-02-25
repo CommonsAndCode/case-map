@@ -1,11 +1,12 @@
 import Supercluster from "supercluster";
-import type { CaseEntry } from "../app/types";
+import type { CaseEntry, CaseRating } from "../app/types";
 
 export type ClusterPointProps = {
   caseId: string;
   title: string;
   short: string;
-  score?: number;
+  rating?: CaseRating;
+  url?: string;
   categories: string[];
 };
 
@@ -27,7 +28,8 @@ export type PointItem = {
   lon: number;
   title: string;
   short: string;
-  score?: number;
+  rating?: CaseRating;
+  url?: string;
   categories: string[];
 };
 
@@ -63,7 +65,8 @@ export function buildIndex(cases: CaseEntry[]): ClusterIndex {
           caseId: c.id,
           title: c.title,
           short: c.short,
-          score: c.score,
+          rating: c.rating,
+          url: c.url,
           categories: c.categories ?? [],
           cluster: false,
         },
@@ -72,8 +75,8 @@ export function buildIndex(cases: CaseEntry[]): ClusterIndex {
     );
 
   const sc = new Supercluster<ClusterPointProps>({
-    radius: 60,
-    maxZoom: 18,
+    radius: 100,
+    maxZoom: 16,
   });
 
   sc.load(points as any);
@@ -105,7 +108,8 @@ export function buildIndex(cases: CaseEntry[]): ClusterIndex {
           lon,
           title: p.title,
           short: p.short,
-          score: p.score,
+          rating: p.rating,
+          url: p.url,
           categories: p.categories ?? [],
         } satisfies PointItem;
       });
