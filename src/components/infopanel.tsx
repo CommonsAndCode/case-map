@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CaseEntry } from "../app/types";
 import { useConfig } from "../app/ConfigContext";
+import { sanitiseUrl } from "../app/config";
 
 function hasScore(
   c: CaseEntry
@@ -82,9 +83,9 @@ export function InfoPanel({
               <p>
                 <strong>{t("updated")}:</strong> {selected.updated}
               </p>
-              {selected.url && (
+              {sanitiseUrl(selected.url ?? null) && (
                 <a
-                  href={selected.url}
+                  href={sanitiseUrl(selected.url ?? null)!}
                   target="_blank"
                   rel="noopener"
                 >
