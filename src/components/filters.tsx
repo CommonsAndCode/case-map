@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type React from "react";
+import { useTranslation } from "react-i18next";
 import type { CaseEntry } from "../app/types";
 
 export type CaseFilterState = {
@@ -37,6 +38,7 @@ function countActiveFilters(f: CaseFilterState) {
 }
 
 export function FilterBar({ cases, value, onChange, onClear }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -90,10 +92,10 @@ export function FilterBar({ cases, value, onChange, onClear }: Props) {
         aria-controls="filterbar2-panel"
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="filterbar2__title">Filter</span>
+        <span className="filterbar2__title">{t("filter")}</span>
 
         <span className="filterbar2__summary">
-          {activeCount === 0 ? "Keine" : `${activeCount} aktiv`}
+          {activeCount === 0 ? t("filterNone") : t("filterActive", { count: activeCount })}
         </span>
 
         <span className="filterbar2__chev" aria-hidden="true">
@@ -106,28 +108,28 @@ export function FilterBar({ cases, value, onChange, onClear }: Props) {
           id="filterbar2-panel"
           className="filterbar2__panel"
           role="region"
-          aria-label="Filteroptionen"
+          aria-label={t("filterOptions")}
         >
           <div className="filterbar2__grid">
             <label className="filterbar2__field">
-              <span className="filterbar2__label">Suche</span>
+              <span className="filterbar2__label">{t("search")}</span>
               <input
                 type="search"
                 className="filterbar2__input"
-                placeholder="Titel / Kurztext …"
+                placeholder={t("searchPlaceholder")}
                 value={value.q}
                 onChange={(e) => onChange({ ...value, q: e.target.value })}
               />
             </label>
 
             <label className="filterbar2__field">
-              <span className="filterbar2__label">Sprache</span>
+              <span className="filterbar2__label">{t("language")}</span>
               <select
                 className="filterbar2__select"
                 value={value.lang}
                 onChange={(e) => onChange({ ...value, lang: e.target.value })}
               >
-                <option value="">Alle</option>
+                <option value="">{t("allLanguages")}</option>
                 {allLangs.map((l) => (
                   <option key={l} value={l}>
                     {l.toUpperCase()}
@@ -137,7 +139,7 @@ export function FilterBar({ cases, value, onChange, onClear }: Props) {
             </label>
 
             <label className="filterbar2__field">
-              <span className="filterbar2__label">Min. Score</span>
+              <span className="filterbar2__label">{t("minScore")}</span>
               <input
                 className="filterbar2__input"
                 type="number"
@@ -158,14 +160,14 @@ export function FilterBar({ cases, value, onChange, onClear }: Props) {
                 className="filterbar2__clear"
                 onClick={() => (onClear ? onClear() : onChange(DEFAULT_FILTER))}
               >
-                Zurücksetzen
+                {t("reset")}
               </button>
             </div>
           </div>
 
-          <div className="filterbar2__cats" aria-label="Kategorien">
+          <div className="filterbar2__cats" aria-label={t("categories")}>
             {allCategories.length === 0 ? (
-              <span className="filterbar2__hint">Keine Kategorien gefunden.</span>
+              <span className="filterbar2__hint">{t("noCategories")}</span>
             ) : (
               allCategories.map((cat) => {
                 const checked = value.categories.includes(cat);

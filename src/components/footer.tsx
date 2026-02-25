@@ -1,14 +1,28 @@
-export function Footer() {
+import { useTranslation } from "react-i18next";
+
+export function Footer({
+  privacyUrl,
+  imprintUrl,
+}: {
+  privacyUrl?: string | null;
+  imprintUrl?: string | null;
+}) {
+  const { t } = useTranslation();
+
+  const hasLinks = privacyUrl || imprintUrl;
+
   return (
     <footer className="app-footer" role="contentinfo">
       <div className="app-footer__inner">
-        <nav className="app-footer__links" aria-label="Rechtliches">
-          <a href="https://commons-and-code.eu/en/legal/privacy/">Datenschutz</a>
-          <a href="https://commons-and-code.eu/en/legal/imprint/">Impressum</a>
-        </nav>
+        {hasLinks && (
+          <nav className="app-footer__links" aria-label="Legal">
+            {privacyUrl && <a href={privacyUrl}>{t("privacy")}</a>}
+            {imprintUrl && <a href={imprintUrl}>{t("imprint")}</a>}
+          </nav>
+        )}
 
         <div className="app-footer__note">
-          Keine Cookies. Statische Seite.
+          {t("noCookies")}
         </div>
       </div>
     </footer>

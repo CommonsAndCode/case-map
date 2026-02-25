@@ -7,14 +7,16 @@ export function TopLeftControls({
   colorblind,
   onToggleColorblind,
   onRecenter,
+  showThemeToggle = true,
 }: {
   theme: Theme;
   onToggleTheme: () => void;
   colorblind: boolean;
   onToggleColorblind: () => void;
   onRecenter: () => void;
+  showThemeToggle?: boolean;
 }) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isDe = i18n.language?.startsWith("de");
 
   return (
@@ -22,8 +24,8 @@ export function TopLeftControls({
       <button
         type="button"
         onClick={() => i18n.changeLanguage(isDe ? "en" : "de")}
-        aria-label={isDe ? "Sprache auf Englisch umstellen" : "Switch language to German"}
-        title={isDe ? "Language: Deutsch" : "Language: English"}
+        aria-label={isDe ? t("switchToEn") : t("switchToDe")}
+        title={isDe ? t("langLabelDe") : t("langLabelEn")}
       >
         {isDe ? "DE" : "EN"}
       </button>
@@ -32,7 +34,7 @@ export function TopLeftControls({
         type="button"
         onClick={onToggleColorblind}
         aria-pressed={colorblind}
-        aria-label={colorblind ? "Farbenblind-Modus deaktivieren" : "Farbenblind-Modus aktivieren"}
+        aria-label={colorblind ? t("colorblindOn") : t("colorblindOff")}
         title="Colorblind"
       >
         CB
@@ -41,21 +43,23 @@ export function TopLeftControls({
       <button
         type="button"
         onClick={onRecenter}
-        aria-label={isDe ? "Karte zentrieren" : "Recenter map"}
-        title={isDe ? "Zentrieren" : "Recenter"}
+        aria-label={t("recenter")}
+        title={t("recenter")}
       >
         ⤾
       </button>
 
-      <button
-        type="button"
-        onClick={onToggleTheme}
-        aria-pressed={theme === "dark"}
-        aria-label={theme === "dark" ? (isDe ? "Hellmodus aktivieren" : "Switch to light mode") : (isDe ? "Dunkelmodus aktivieren" : "Switch to dark mode")}
-        title={theme === "dark" ? "Dark" : "Light"}
-      >
-        {theme === "dark" ? "☾" : "☀"}
-      </button>
+      {showThemeToggle && (
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          aria-pressed={theme === "dark"}
+          aria-label={theme === "dark" ? t("lightMode") : t("darkMode")}
+          title={theme === "dark" ? "Dark" : "Light"}
+        >
+          {theme === "dark" ? "☾" : "☀"}
+        </button>
+      )}
     </div>
   );
 }

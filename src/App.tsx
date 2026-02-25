@@ -1,5 +1,6 @@
 // src/App.tsx (Änderungen)
 import { useEffect, useRef, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import "./styles/style.css";
 import "./styles/darkmode.css";
 
@@ -25,6 +26,7 @@ import {
 type MapApi = { recenter: () => void };
 
 export default function App() {
+  const { t } = useTranslation();
   const [cases, setCases] = useState<CaseEntry[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -62,7 +64,7 @@ export default function App() {
       .catch((err) => {
         if (!mounted) return;
         console.error(err);
-        setError("Failed to load case data.");
+        setError(t("errorLoadFailed"));
         setLoading(false);
       });
 
@@ -110,9 +112,14 @@ export default function App() {
         cases={filteredCases}
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
+        logoUrl={`${import.meta.env.BASE_URL}img/logo.svg`}
+        logoLink="https://commons-and-code.eu/de/"
       />
 
-      <Footer />
+      <Footer
+        privacyUrl="https://commons-and-code.eu/en/legal/privacy/"
+        imprintUrl="https://commons-and-code.eu/en/legal/imprint/"
+      />
 
       {loading && (
         <>
@@ -124,7 +131,7 @@ export default function App() {
       {error && (
         <div className="overlay">
           <div className="overlay-content">
-            <strong>Error</strong>
+            <strong>{t("errorTitle")}</strong>
             <div style={{ marginTop: 8 }}>{error}</div>
           </div>
         </div>
