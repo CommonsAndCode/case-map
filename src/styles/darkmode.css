@@ -8,11 +8,11 @@ html[data-theme="dark"]{
   --text-color: #fff;
   --text-inverse-color: #502379;
 
-  /* Rating dot colours (adjusted for dark bg) */
-  --rating-best-practice: #4ade80;
-  --rating-promising: #60a5fa;
-  --rating-flawed-execution: #fbbf24;
-  --rating-cautionary: #f87171;
+  /* Rating dot colours — Wong palette, lightened for dark bg */
+  --rating-best-practice: #56d4a4;
+  --rating-promising: #56b4e9;
+  --rating-flawed-execution: #f0c75e;
+  --rating-cautionary: #e8875a;
   --rating-unrated: #a1a1aa;
 
   --bar-selected-color: #FDC220;
@@ -96,7 +96,7 @@ html[data-theme="dark"] .info-ui-rating[data-rating="unrated"]{
   color: #ccc;
 }
 
-html[data-theme="dark"] .category-filter__chip.is-active{
+html[data-theme="dark"] .filter-dropdown__chip.is-active{
   background: var(--cc-primary);
   color: #000;
 }

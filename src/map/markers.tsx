@@ -35,7 +35,7 @@ export function CaseMarker({
       {title && (
         <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
           <strong>{title}</strong>
-          {short && <div className="tooltip-short" style={{ marginTop: 2, fontSize: 13 }}>{short}</div>}
+          {short && <div style={{ marginTop: 2, fontSize: 13 }}>{short}</div>}
         </Tooltip>
       )}
     </Marker>
