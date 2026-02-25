@@ -6,7 +6,6 @@ import "./styles/darkmode.css";
 import { MapView } from "./components/mapview.tsx";
 import { Legend } from "./components/legend.tsx";
 import { InfoPanel } from "./components/infopanel.tsx";
-import { Overlay } from "./components/overlay.tsx";
 import { TopLeftControls } from "./components/topleft-controls.tsx";
 import { Footer } from "./components/footer.tsx";
 
@@ -105,14 +104,6 @@ export default function App() {
         }
       />
 
-      <TopLeftControls
-        theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-        colorblind={colorblind}
-        onToggleColorblind={() => setColorblind((v) => !v)}
-        onRecenter={() => mapApiRef.current?.recenter()}
-      />
-
       <Legend />
 
       <InfoPanel
@@ -122,7 +113,6 @@ export default function App() {
       />
 
       <Footer />
-      <Overlay />
 
       {loading && (
         <>
