@@ -38,6 +38,7 @@ export type MapItem = ClusterItem | PointItem;
 export type ClusterIndex = {
   getClusters: (bbox: BBox, zoom: number) => MapItem[];
   getClusterExpansionZoom: (clusterId: number) => number;
+  getClusterLeaves: (clusterId: number) => PointItem[];
 };
 
 type ClusterProps = {
@@ -116,5 +117,24 @@ export function buildIndex(cases: CaseEntry[]): ClusterIndex {
     },
 
     getClusterExpansionZoom: (clusterId) => sc.getClusterExpansionZoom(clusterId),
+
+    getClusterLeaves: (clusterId) => {
+      const leaves = sc.getLeaves(clusterId, Infinity) as Array<GeoFeature<PointProps>>;
+      return leaves.map((f) => {
+        const [lon, lat] = f.geometry.coordinates;
+        const p = f.properties;
+        return {
+          kind: "point",
+          id: p.caseId,
+          lat,
+          lon,
+          title: p.title,
+          short: p.short,
+          rating: p.rating,
+          url: p.url,
+          categories: p.categories ?? [],
+        } satisfies PointItem;
+      });
+    },
   };
 }

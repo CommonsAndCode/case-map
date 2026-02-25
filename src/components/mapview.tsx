@@ -118,11 +118,20 @@ function ItemsLayer({
               lon={item.lon}
               count={item.count}
               onClick={() => {
+                const currentZoom = map.getZoom();
                 const nextZoom = Math.min(
                   index.getClusterExpansionZoom(item.clusterId),
                   18
                 );
-                map.setView([item.lat, item.lon], nextZoom, { animate: true });
+                // If we can't zoom further (co-located points), select the first case
+                if (nextZoom <= currentZoom) {
+                  const leaves = index.getClusterLeaves(item.clusterId);
+                  if (leaves.length > 0) {
+                    onSelectCase(leaves[0].id);
+                  }
+                } else {
+                  map.setView([item.lat, item.lon], nextZoom, { animate: true });
+                }
               }}
             />
           );
