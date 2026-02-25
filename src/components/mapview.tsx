@@ -135,6 +135,7 @@ function ItemsLayer({
             lon={item.lon}
             title={item.title}
             short={item.short}
+            rating={item.rating}
             onClick={() => onSelectCase(item.id)}
           />
         );

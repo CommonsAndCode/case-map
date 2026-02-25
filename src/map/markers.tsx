@@ -2,14 +2,15 @@ import { Marker, Tooltip } from "react-leaflet";
 import type { LeafletMouseEventHandlerFn } from "leaflet";
 import { getPointIcon } from "../map/pointIcons.ts";
 import { getClusterIcon } from "../map/clusterIcons.ts";
+import type { CaseRating } from "../app/types.ts";
+import { getRatingColor } from "../map/ratingColors.ts";
 
 type CaseMarkerProps = {
   lat: number;
   lon: number;
   title?: string;
   short?: string;
-  url?: string;
-  color?: string;
+  rating?: CaseRating;
   size?: number;
   onClick?: LeafletMouseEventHandlerFn;
 };
@@ -19,10 +20,12 @@ export function CaseMarker({
   lon,
   title,
   short,
-  color = "#2a6df4",
+  rating,
   size = 12,
   onClick,
 }: CaseMarkerProps) {
+  const color = getRatingColor(rating);
+
   return (
     <Marker
       position={[lat, lon]}
@@ -32,7 +35,7 @@ export function CaseMarker({
       {title && (
         <Tooltip direction="top" offset={[0, -8]} opacity={0.95}>
           <strong>{title}</strong>
-          {short && <div style={{ marginTop: 2, fontSize: 13 }}>{short}</div>}
+          {short && <div className="tooltip-short" style={{ marginTop: 2, fontSize: 13 }}>{short}</div>}
         </Tooltip>
       )}
     </Marker>
