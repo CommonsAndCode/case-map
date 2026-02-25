@@ -38,6 +38,14 @@ export function InfoPanel({
 
       {selected && (
         <div className="info-ui-panel is-expanded">
+          <button
+            className="info-ui-close"
+            onClick={onClose}
+            aria-label={t("close")}
+            title={t("close")}
+          >
+            ✕
+          </button>
           <div className="info-ui-content">
             <h2>{selected.title}</h2>
 
@@ -72,10 +80,6 @@ export function InfoPanel({
                 {t("readFullCase")} ↗
               </a>
             )}
-
-            <div style={{ marginTop: 10 }}>
-              <button onClick={onClose}>{t("close")}</button>
-            </div>
           </div>
         </div>
       )}
