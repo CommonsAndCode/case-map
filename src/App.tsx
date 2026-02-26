@@ -5,7 +5,6 @@ import "./styles/style.css";
 import "./styles/darkmode.css";
 
 import { MapView } from "./components/mapview.tsx";
-import { Legend } from "./components/legend.tsx";
 import { InfoPanel } from "./components/infopanel.tsx";
 import { TopLeftControls } from "./components/topleft-controls.tsx";
 import { Footer } from "./components/footer.tsx";
@@ -35,7 +34,6 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(
     getInitialTheme(config.theme ?? undefined)
   );
-  const [colorblind, setColorblind] = useState(false);
 
   const [filter, setFilter] = useState<CaseFilterState>(DEFAULT_FILTER);
 
@@ -63,11 +61,7 @@ export default function App() {
 
   useEffect(() => {
     applyTheme(theme, config.theme != null);
-    document.documentElement.setAttribute(
-      "data-colorblind",
-      colorblind ? "1" : "0"
-    );
-  }, [theme, colorblind, config.theme]);
+  }, [theme, config.theme]);
 
   useEffect(() => {
     let mounted = true;
@@ -120,14 +114,10 @@ export default function App() {
           <TopLeftControls
             theme={theme}
             onToggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-            colorblind={colorblind}
-            onToggleColorblind={() => setColorblind((v) => !v)}
             onRecenter={() => mapApiRef.current?.recenter()}
           />
         }
       />
-
-      <Legend />
 
       <InfoPanel
         cases={filteredCases}

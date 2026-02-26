@@ -109,3 +109,57 @@ Commits im Einzelnen:
    - Neue Variable --cc-primary in :root (blau) und dark-theme (gold)
    - Cluster-Bubbles und Punkt-Marker nutzen --cc-primary
    - Externe Einbetter können die Akzentfarbe per ?color=... überschreiben
+
+
+---
+
+Phase 2: UI-Vereinfachung und MVP-Anpassungen (Februar 2026):
+
+### Rating-Kategorien statt Score
+
+Das numerische Score-System (0–100) wird durch ein Kategoriensystem ersetzt.
+Der neue Typ CaseRating hat fünf Werte: "best-practice", "promising",
+"flawed-execution", "cautionary" und "unrated".
+
+Änderungen:
+- types.ts: score?: number → rating?: CaseRating
+- cluster.ts: Transportiert jetzt rating und url statt score
+- i18n.ts: Übersetzungen für alle fünf Rating-Kategorien (DE/EN)
+- Hugo-Template: index.cases.json gibt jetzt rating aus dem Frontmatter aus
+- Hugo-Fallbeispiele: Neues Frontmatter-Feld rating: "best-practice" etc.
+
+### InfoPanel vereinfacht
+
+Das aufklappbare Panel mit "N Fälle · Ø Score" oben rechts ist entfernt.
+Stattdessen zeigt das InfoPanel nur noch das Logo und (bei Auswahl) die
+Falldetails mit Rating-Badge, Kategorien und Link zum vollständigen Artikel.
+
+### Kategorie-Filter als Seitenleiste
+
+Die komplexe Filterleiste oben (mit Textsuche, Sprachauswahl, Min-Score)
+ist durch eine einfache Kategorie-Seitenleiste links ersetzt. Man kann
+Kategorien an- und abwählen, es gibt einen Reset-Button.
+
+### Legende und Farbenblind-Modus entfernt
+
+Die Legende unten rechts und der Farbenblind-Modus (CB-Button) sind entfernt.
+Die Standard-Farben sind bereits kontrastreich genug. Die Datei legend.tsx
+ist gelöscht.
+
+### Sprach-Button im Embed-Modus ausblenden
+
+Wenn ein lang-Parameter in der URL gesetzt ist, wird der Sprach-Umschalter
+(DE/EN-Button) nicht mehr angezeigt. Das betrifft typischerweise den
+Embed-Modus, in dem die Sprache von der einbettenden Seite vorgegeben wird.
+Neues Config-Feld: showLanguageToggle: boolean.
+
+### URL im Marker-Popup
+
+Wenn ein Fallbeispiel eine URL hat, wird diese jetzt auch im Leaflet-Popup
+angezeigt (als "↗ Link"), nicht nur im InfoPanel.
+
+### Testdaten
+
+18 Testeinträge in cases.json, davon 16 als "[TESTDATEN]" markiert.
+Verschiedene Ratings, mehrere Standorte pro Fall (für Clustering-Tests),
+Einträge im Ruhrgebiet (6 Standorte) zum Testen der Cluster-Funktionalität.

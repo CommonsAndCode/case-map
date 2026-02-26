@@ -15,6 +15,9 @@ export interface AppConfig {
   /** Whether to show the dark/light toggle button. */
   showThemeToggle: boolean;
 
+  /** Whether to show the language toggle button. */
+  showLanguageToggle: boolean;
+
   /** Whether to show the logo in the info panel. */
   showLogo: boolean;
 
@@ -45,6 +48,7 @@ const STANDALONE_DEFAULTS: AppConfig = {
   lang: null,
   theme: null,
   showThemeToggle: true,
+  showLanguageToggle: true,
   showLogo: true,
   logoUrl: `${BASE_URL}img/logo.svg`,
   logoLink: "https://commons-and-code.eu",
@@ -60,6 +64,7 @@ const EMBED_DEFAULTS: AppConfig = {
   lang: null,
   theme: null,
   showThemeToggle: false,
+  showLanguageToggle: true,
   showLogo: false,
   logoUrl: null,
   logoLink: null,
@@ -127,6 +132,7 @@ export function parseConfig(search: string): AppConfig {
   const privacyUrl = params.get("privacyUrl");
   const color = params.get("color");
 
+  const resolvedLang = lang && isValidLang(lang) ? lang : defaults.lang;
   const resolvedLogo = logo ?? defaults.logoUrl;
   const resolvedImprint = sanitiseUrl(imprintUrl) ?? defaults.imprintUrl;
   const resolvedPrivacy = sanitiseUrl(privacyUrl) ?? defaults.privacyUrl;
@@ -134,9 +140,10 @@ export function parseConfig(search: string): AppConfig {
   return {
     mode,
     dataUrl: sanitiseUrl(dataUrl) ?? defaults.dataUrl,
-    lang: lang && isValidLang(lang) ? lang : defaults.lang,
+    lang: resolvedLang,
     theme: theme && isValidTheme(theme) ? theme : defaults.theme,
     showThemeToggle: defaults.showThemeToggle,
+    showLanguageToggle: !resolvedLang,
     showLogo: logo ? true : defaults.showLogo,
     logoUrl: sanitiseUrl(resolvedLogo),
     logoLink: sanitiseUrl(logoLink) ?? defaults.logoLink,

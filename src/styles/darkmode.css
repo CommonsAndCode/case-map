@@ -8,6 +8,13 @@ html[data-theme="dark"]{
   --text-color: #fff;
   --text-inverse-color: #502379;
 
+  /* Rating dot colours — Wong palette, lightened for dark bg */
+  --rating-best-practice: #56d4a4;
+  --rating-promising: #56b4e9;
+  --rating-flawed-execution: #f0c75e;
+  --rating-cautionary: #e8875a;
+  --rating-unrated: #a1a1aa;
+
   --bar-selected-color: #FDC220;
   --bar-text-color: #000;
 
@@ -62,4 +69,34 @@ html[data-theme="dark"] .app-footer__note{
 .app-footer__links a:focus-visible{
   outline: 2px solid var(--focus-color);
   outline-offset: 2px;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="best-practice"]{
+  background: #1b4332;
+  color: #95d5b2;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="promising"]{
+  background: #1a3a5c;
+  color: #a2d2ff;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="flawed-execution"]{
+  background: #5c4a1e;
+  color: #ffd166;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="cautionary"]{
+  background: #5c1a1a;
+  color: #ffa8a8;
+}
+
+html[data-theme="dark"] .info-ui-rating[data-rating="unrated"]{
+  background: #3a3a3a;
+  color: #ccc;
+}
+
+html[data-theme="dark"] .filter-dropdown__chip.is-active{
+  background: var(--cc-primary);
+  color: #000;
 }

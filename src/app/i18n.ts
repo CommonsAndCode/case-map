@@ -12,37 +12,28 @@ i18n
         translation: {
           // Info panel
           cases: "Fälle",
-          avgScore: "Ø Score",
           selectMarker: "Klicke auf einen Marker, um Details zu sehen.",
-          score: "Score",
+          rating: "Bewertung",
           categories: "Kategorien",
           updated: "Zuletzt aktualisiert",
           readFullCase: "Vollständigen Fall lesen",
           close: "Schließen",
 
-          // Filter bar
+          // Ratings
+          "rating.best-practice": "Erfolgsbeispiel",
+          "rating.promising": "Vielversprechend",
+          "rating.flawed-execution": "Guter Ansatz, schwache Umsetzung",
+          "rating.cautionary": "Negativbeispiel",
+          "rating.unrated": "Noch nicht bewertet",
+
+          // Filter sidebar
           filter: "Filter",
           filterNone: "Keine",
           filterActive: "{{count}} aktiv",
           filterOptions: "Filteroptionen",
-          search: "Suche",
-          searchPlaceholder: "Titel / Kurztext …",
-          language: "Sprache",
-          allLanguages: "Alle",
-          minScore: "Min. Score",
-          reset: "Zurücksetzen",
+          allCategories: "Alle Kategorien",
           noCategories: "Keine Kategorien gefunden.",
-
-          // Legend
-          legendTitle: "Digitale Kommune Fallkarte",
-          legendScore: "Score (1–100)",
-          legendWorst: "1 · Schlecht",
-          legendMixed: "50 · Gemischt",
-          legendBest: "100 · Gut",
-          legendMarkers: "Marker",
-          legendSingle: "● Einzelner Fall",
-          legendCluster: "◯ Zahl = Cluster",
-          legendHint: "Klicke auf einen Marker, um den Fall zu erkunden.",
+          reset: "Zurücksetzen",
 
           // Footer
           privacy: "Datenschutz",
@@ -50,15 +41,13 @@ i18n
           noCookies: "Keine Cookies. Statische Seite.",
 
           // Controls
+          recenter: "Karte zentrieren",
+          lightMode: "Hellmodus aktivieren",
+          darkMode: "Dunkelmodus aktivieren",
           switchToEn: "Sprache auf Englisch umstellen",
           switchToDe: "Sprache auf Deutsch umstellen",
           langLabelDe: "Deutsch",
           langLabelEn: "English",
-          colorblindOn: "Farbenblind-Modus deaktivieren",
-          colorblindOff: "Farbenblind-Modus aktivieren",
-          recenter: "Karte zentrieren",
-          lightMode: "Hellmodus aktivieren",
-          darkMode: "Dunkelmodus aktivieren",
 
           // Loading / error
           offline: "Offline-Modus",
@@ -70,37 +59,28 @@ i18n
         translation: {
           // Info panel
           cases: "Cases",
-          avgScore: "Ø Score",
           selectMarker: "Select a marker to see details.",
-          score: "Score",
+          rating: "Rating",
           categories: "Categories",
           updated: "Updated",
           readFullCase: "Read full case",
           close: "Close",
 
-          // Filter bar
+          // Ratings
+          "rating.best-practice": "Best practice",
+          "rating.promising": "Promising",
+          "rating.flawed-execution": "Good idea, weak execution",
+          "rating.cautionary": "Cautionary example",
+          "rating.unrated": "Not yet rated",
+
+          // Filter sidebar
           filter: "Filter",
           filterNone: "None",
           filterActive: "{{count}} active",
           filterOptions: "Filter options",
-          search: "Search",
-          searchPlaceholder: "Title / summary …",
-          language: "Language",
-          allLanguages: "All",
-          minScore: "Min. Score",
-          reset: "Reset",
+          allCategories: "All categories",
           noCategories: "No categories found.",
-
-          // Legend
-          legendTitle: "Digital Municipality Case Map",
-          legendScore: "Score (1–100)",
-          legendWorst: "1 · Worst",
-          legendMixed: "50 · Mixed",
-          legendBest: "100 · Best",
-          legendMarkers: "Markers",
-          legendSingle: "● Single case",
-          legendCluster: "◯ Numbered circle = cluster",
-          legendHint: "Click a marker to explore the case.",
+          reset: "Reset",
 
           // Footer
           privacy: "Privacy",
@@ -108,15 +88,13 @@ i18n
           noCookies: "No cookies. Static site.",
 
           // Controls
+          recenter: "Recentre map",
+          lightMode: "Switch to light mode",
+          darkMode: "Switch to dark mode",
           switchToEn: "Switch language to English",
           switchToDe: "Switch language to German",
           langLabelDe: "Deutsch",
           langLabelEn: "English",
-          colorblindOn: "Disable colourblind mode",
-          colorblindOff: "Enable colourblind mode",
-          recenter: "Recenter map",
-          lightMode: "Switch to light mode",
-          darkMode: "Switch to dark mode",
 
           // Loading / error
           offline: "Offline mode",
