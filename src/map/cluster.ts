@@ -58,6 +58,57 @@ type GeoFeature<P> = {
 };
 
 
+/**
+ * Simple deterministic hash → float in [0, 1).
+ * Used to jitter co-located pins repeatably.
+ */
+function hashToFloat(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return ((h >>> 0) % 10000) / 10000;
+}
+
+/**
+ * Offsets pins that share the exact same coordinates by a few hundred metres
+ * in a deterministic direction based on case ID + location index.
+ */
+function jitterColocated(
+  points: GeoFeature<PointProps>[]
+): GeoFeature<PointProps>[] {
+  // ~300m offset in degrees at ~50° latitude
+  const OFFSET = 0.003;
+
+  // Group by coordinate key
+  const groups = new Map<string, number[]>();
+  for (let i = 0; i < points.length; i++) {
+    const [lon, lat] = points[i].geometry.coordinates;
+    const key = `${lat},${lon}`;
+    let g = groups.get(key);
+    if (!g) {
+      g = [];
+      groups.set(key, g);
+    }
+    g.push(i);
+  }
+
+  // Only jitter groups with >1 point
+  const result = points.map((p) => ({ ...p, geometry: { ...p.geometry, coordinates: [...p.geometry.coordinates] as [number, number] } }));
+  for (const indices of groups.values()) {
+    if (indices.length < 2) continue;
+    for (const idx of indices) {
+      const id = result[idx].properties.caseId;
+      const angle = hashToFloat(id) * 2 * Math.PI;
+      const dist = 0.5 + hashToFloat(id + ":r") * 0.5; // 50-100% of OFFSET
+      result[idx].geometry.coordinates[0] += Math.cos(angle) * OFFSET * dist;
+      result[idx].geometry.coordinates[1] += Math.sin(angle) * OFFSET * dist;
+    }
+  }
+  return result;
+}
+
 export function buildIndex(cases: CaseEntry[]): ClusterIndex {
     const points: GeoFeature<PointProps>[] = cases.flatMap((c) =>
       c.locations.map((loc) => ({
@@ -75,12 +126,14 @@ export function buildIndex(cases: CaseEntry[]): ClusterIndex {
       }))
     );
 
+  const jittered = jitterColocated(points);
+
   const sc = new Supercluster<ClusterPointProps>({
     radius: 100,
     maxZoom: 16,
   });
 
-  sc.load(points as any);
+  sc.load(jittered as any);
 
   return {
     getClusters: (bbox, zoom) => {
