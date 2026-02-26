@@ -1,206 +1,436 @@
 [
   {
+    "categories": [
+      "digitalisierung",
+      "buergerdienste"
+    ],
     "id": "helsinki-digital-service",
     "lang": "de",
-    "title": "Digitale Bürgerdienste Helsinki",
+    "locations": [
+      {
+        "label": "Helsinki",
+        "lat": 60.1699,
+        "lon": 24.9384
+      }
+    ],
+    "rating": "best-practice",
     "short": "Zentrale Plattform für kommunale Services.",
-    "categories": ["digitalisierung", "buergerdienste"],
-    "rating": "best-practice",
-    "url": "https://commons-and-code.eu/de/fallbeispiele/helsinki-digital-services/",
-    "locations": [{ "lat": 60.1699, "lon": 24.9384, "label": "Helsinki" }],
-    "updated": "2026-02-25"
+    "title": "Digitale Bürgerdienste Helsinki",
+    "updated": "2026-02-25T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/helsinki-digital-services/"
   },
   {
-    "id": "kameras-stoppen",
-    "lang": "de",
-    "title": "Kameras Stoppen",
-    "short": "Wie eine Kölner Bürger*inneninitiative die polizeiliche Videoüberwachung vor Gericht erfolgreich herausfordert.",
-    "categories": ["freiheitsrechte", "ueberwachung"],
-    "rating": "best-practice",
-    "url": "https://commons-and-code.eu/de/fallbeispiele/kameras-stoppen/",
-    "locations": [{ "lat": 50.9370, "lon": 6.9615, "label": "Köln" }],
-    "updated": "2026-02-12"
-  },
-  {
-    "id": "test-open-data-portal-nrw",
-    "lang": "de",
-    "title": "[TESTDATEN] Open-Data-Portal NRW",
-    "short": "Landesweites Portal für offene Verwaltungsdaten mit einheitlicher API und Qualitätsstandards.",
-    "categories": ["open-data", "transparenz", "digitalisierung"],
-    "rating": "best-practice",
-    "locations": [
-      { "lat": 51.4332, "lon": 6.7623, "label": "Düsseldorf" },
-      { "lat": 51.9607, "lon": 7.6261, "label": "Münster" },
-      { "lat": 50.9375, "lon": 6.9603, "label": "Köln" }
+    "categories": [
+      "ki",
+      "digitalisierung",
+      "buergerdienste"
     ],
-    "updated": "2026-01-15"
-  },
-  {
-    "id": "test-freifunk-community-mesh",
-    "lang": "de",
-    "title": "[TESTDATEN] Freifunk Community-Netz",
-    "short": "Bürger*inneninitiative baut freies WLAN-Mesh-Netzwerk in mehreren Städten auf.",
-    "categories": ["digitale-infrastruktur", "buergerbeteiligung"],
-    "rating": "promising",
-    "locations": [
-      { "lat": 52.5200, "lon": 13.4050, "label": "Berlin" },
-      { "lat": 53.5511, "lon": 9.9937, "label": "Hamburg" },
-      { "lat": 48.1351, "lon": 11.5820, "label": "München" },
-      { "lat": 50.1109, "lon": 8.6821, "label": "Frankfurt" }
-    ],
-    "updated": "2025-11-03"
-  },
-  {
-    "id": "test-smart-city-dashboard-wien",
-    "lang": "de",
-    "title": "[TESTDATEN] Smart-City-Dashboard Wien",
-    "short": "Echtzeitdaten zu Verkehr, Luft und Energie auf einem öffentlichen Dashboard.",
-    "categories": ["smart-city", "open-data", "transparenz"],
-    "rating": "best-practice",
-    "locations": [{ "lat": 48.2082, "lon": 16.3738, "label": "Wien" }],
-    "updated": "2026-02-01"
-  },
-  {
-    "id": "test-schuldigitalisierung-bw",
-    "lang": "de",
-    "title": "[TESTDATEN] Schuldigitalisierung Baden-Württemberg",
-    "short": "Landesweites Programm zur digitalen Ausstattung von Schulen mit Moodle und BigBlueButton.",
-    "categories": ["bildung", "open-source", "digitalisierung"],
-    "rating": "flawed-execution",
-    "locations": [
-      { "lat": 48.7758, "lon": 9.1829, "label": "Stuttgart" },
-      { "lat": 49.0069, "lon": 8.4037, "label": "Karlsruhe" },
-      { "lat": 47.9990, "lon": 7.8421, "label": "Freiburg" }
-    ],
-    "updated": "2025-09-20"
-  },
-  {
-    "id": "test-gesundheitsapp-datenleck",
-    "lang": "de",
-    "title": "[TESTDATEN] Kommunale Gesundheitsapp mit Datenleck",
-    "short": "Eine Gesundheitsapp der Stadtverwaltung speicherte Patient*innendaten unverschlüsselt in einer öffentlichen Cloud.",
-    "categories": ["datenschutz", "gesundheit", "digitalisierung"],
-    "rating": "cautionary",
-    "locations": [{ "lat": 48.3705, "lon": 10.8978, "label": "Augsburg" }],
-    "updated": "2025-12-10"
-  },
-  {
-    "id": "test-buergerhaushalt-muenster",
-    "lang": "de",
-    "title": "[TESTDATEN] Digitaler Bürger*innenhaushalt Münster",
-    "short": "Online-Plattform zur Beteiligung der Bevölkerung an der kommunalen Haushaltsplanung.",
-    "categories": ["buergerbeteiligung", "transparenz"],
-    "rating": "promising",
-    "locations": [{ "lat": 51.9625, "lon": 7.6290, "label": "Münster" }],
-    "updated": "2026-01-28"
-  },
-  {
     "id": "test-ki-verwaltung-hamburg",
     "lang": "de",
-    "title": "[TESTDATEN] KI-gestützte Antragsbearbeitung Hamburg",
-    "short": "Automatisierte Vorprüfung von Bauanträgen mittels maschinellem Lernen.",
-    "categories": ["ki", "digitalisierung", "buergerdienste"],
-    "rating": "promising",
-    "locations": [{ "lat": 53.5530, "lon": 9.9900, "label": "Hamburg" }],
-    "updated": "2026-02-14"
-  },
-  {
-    "id": "test-ueberwachung-algorithmus-koeln",
-    "lang": "de",
-    "title": "[TESTDATEN] Predictive Policing Pilotprojekt",
-    "short": "Einsatz algorithmischer Kriminalitätsprognosen ohne ausreichende Transparenz oder Evaluierung.",
-    "categories": ["ueberwachung", "ki", "freiheitsrechte"],
-    "rating": "cautionary",
     "locations": [
-      { "lat": 50.9390, "lon": 6.9580, "label": "Köln" },
-      { "lat": 51.2277, "lon": 6.7735, "label": "Düsseldorf" }
+      {
+        "label": "Hamburg",
+        "lat": 53.5511,
+        "lon": 9.9937
+      }
     ],
-    "updated": "2025-10-05"
+    "rating": "promising",
+    "short": "Automatisierte Vorprüfung von Bauanträgen mittels maschinellem Lernen.",
+    "title": "[TESTDATEN] KI-gestützte Antragsbearbeitung Hamburg",
+    "updated": "2026-02-14T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-ki-verwaltung-hamburg/"
   },
   {
+    "categories": [
+      "freiheitsrechte"
+    ],
+    "id": "kameras-stoppen",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Köln",
+        "lat": 50.937053892265546,
+        "lon": 6.9615089881495855
+      }
+    ],
+    "rating": "best-practice",
+    "short": "Wie eine Kölner Bürger*inneninitiative die polizeiliche Videoüberwachung vor Gericht erfolgreich herausfordert.",
+    "title": "Kameras Stoppen",
+    "updated": "2026-02-12T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/kameras-stoppen/"
+  },
+  {
+    "categories": [
+      "smart-city",
+      "open-data",
+      "transparenz"
+    ],
+    "id": "test-smart-city-dashboard-wien",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Wien",
+        "lat": 48.2082,
+        "lon": 16.3738
+      }
+    ],
+    "rating": "best-practice",
+    "short": "Echtzeitdaten zu Verkehr, Luft und Energie auf einem öffentlichen Dashboard.",
+    "title": "[TESTDATEN] Smart-City-Dashboard Wien",
+    "updated": "2026-02-01T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-smart-city-dashboard-wien/"
+  },
+  {
+    "categories": [
+      "buergerbeteiligung",
+      "transparenz"
+    ],
+    "id": "test-buergerhaushalt-muenster",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Münster",
+        "lat": 51.9607,
+        "lon": 7.6261
+      }
+    ],
+    "rating": "promising",
+    "short": "Online-Plattform zur Beteiligung der Bevölkerung an der kommunalen Haushaltsplanung.",
+    "title": "[TESTDATEN] Digitaler Bürger*innenhaushalt Münster",
+    "updated": "2026-01-28T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-buergerhaushalt-muenster/"
+  },
+  {
+    "categories": [
+      "open-data",
+      "verkehr",
+      "open-source"
+    ],
     "id": "test-osm-radwege-berlin",
     "lang": "de",
-    "title": "[TESTDATEN] OpenStreetMap-basierte Radwegeplanung Berlin",
-    "short": "Die Verkehrsverwaltung nutzt offene Geodaten für die Planung neuer Fahrradinfrastruktur.",
-    "categories": ["open-data", "verkehr", "open-source"],
-    "rating": "best-practice",
-    "locations": [{ "lat": 52.5165, "lon": 13.3890, "label": "Berlin" }],
-  },
-  {
-    "id": "test-e-government-tallinn",
-    "lang": "en",
-    "title": "[TEST DATA] Tallinn e-Government Platform",
-    "short": "Comprehensive digital services for residents, from voting to healthcare, built on open-source infrastructure.",
-    "categories": ["digitalisierung", "open-source", "buergerdienste"],
-    "rating": "best-practice",
-    "locations": [{ "lat": 59.4370, "lon": 24.7536, "label": "Tallinn" }],
-    "updated": "2025-08-30"
-  },
-  {
-    "id": "test-facial-recognition-ban-amsterdam",
-    "lang": "en",
-    "title": "[TEST DATA] Facial Recognition Moratorium Amsterdam",
-    "short": "City council votes to suspend all facial recognition technology in public spaces pending regulation.",
-    "categories": ["freiheitsrechte", "ueberwachung", "datenschutz"],
-    "rating": "best-practice",
-    "locations": [{ "lat": 52.3676, "lon": 4.9041, "label": "Amsterdam" }],
-    "updated": "2025-07-12"
-  },
-  {
-    "id": "test-barcelona-decidim",
-    "lang": "en",
-    "title": "[TEST DATA] Barcelona Decidim Participation Platform",
-    "short": "Open-source civic participation platform enabling residents to shape urban policy.",
-    "categories": ["buergerbeteiligung", "open-source", "transparenz"],
-    "rating": "best-practice",
-    "locations": [{ "lat": 41.3851, "lon": 2.1734, "label": "Barcelona" }],
-    "updated": "2025-11-15"
-  },
-  {
-    "id": "test-cluster-ruhrgebiet",
-    "lang": "de",
-    "title": "[TESTDATEN] Digitalisierungsoffensive Ruhrgebiet",
-    "short": "Gemeinsame Digitalisierungsstrategie der Ruhrgebietskommunen mit geteilter Infrastruktur.",
-    "categories": ["digitalisierung", "smart-city"],
-    "rating": "promising",
     "locations": [
-      { "lat": 51.4556, "lon": 7.0116, "label": "Essen" },
-      { "lat": 51.5136, "lon": 7.4653, "label": "Dortmund" },
-      { "lat": 51.4818, "lon": 7.2162, "label": "Bochum" },
-      { "lat": 51.4344, "lon": 6.7624, "label": "Duisburg" },
-      { "lat": 51.3670, "lon": 7.4633, "label": "Hagen" },
-      { "lat": 51.4508, "lon": 7.0131, "label": "Gelsenkirchen" }
+      {
+        "label": "Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      }
     ],
-    "updated": "2025-06-01"
+    "rating": "best-practice",
+    "short": "Die Verkehrsverwaltung nutzt offene Geodaten für die Planung neuer Fahrradinfrastruktur.",
+    "title": "[TESTDATEN] OpenStreetMap-basierte Radwegeplanung Berlin",
+    "updated": "2026-01-20T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-osm-radwege-berlin/"
   },
   {
+    "categories": [
+      "open-data",
+      "transparenz",
+      "digitalisierung"
+    ],
+    "id": "test-open-data-portal-nrw",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Düsseldorf",
+        "lat": 51.4332,
+        "lon": 6.7623
+      },
+      {
+        "label": "Münster",
+        "lat": 51.9607,
+        "lon": 7.6261
+      },
+      {
+        "label": "Köln",
+        "lat": 50.9375,
+        "lon": 6.9603
+      }
+    ],
+    "rating": "best-practice",
+    "short": "Landesweites Portal für offene Verwaltungsdaten mit einheitlicher API und Qualitätsstandards.",
+    "title": "[TESTDATEN] Open-Data-Portal NRW",
+    "updated": "2026-01-15T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-open-data-portal-nrw/"
+  },
+  {
+    "categories": [
+      "datenschutz",
+      "gesundheit",
+      "digitalisierung"
+    ],
+    "id": "test-gesundheitsapp-datenleck",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Augsburg",
+        "lat": 48.3705,
+        "lon": 10.8978
+      }
+    ],
+    "rating": "cautionary",
+    "short": "Eine Gesundheitsapp der Stadtverwaltung speicherte Patient*innendaten unverschlüsselt in einer öffentlichen Cloud.",
+    "title": "[TESTDATEN] Kommunale Gesundheitsapp mit Datenleck",
+    "updated": "2025-12-10T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-gesundheitsapp-datenleck/"
+  },
+  {
+    "categories": [
+      "transparenz",
+      "open-data"
+    ],
     "id": "test-transparenzportal-hh",
     "lang": "de",
-    "title": "[TESTDATEN] Transparenzportal Hamburg",
-    "short": "Alle Verträge, Gutachten und Senatsbeschlüsse der Stadt frei zugänglich online.",
-    "categories": ["transparenz", "open-data"],
+    "locations": [
+      {
+        "label": "Hamburg",
+        "lat": 53.5511,
+        "lon": 9.9937
+      }
+    ],
     "rating": "best-practice",
-    "locations": [{ "lat": 53.5490, "lon": 9.9970, "label": "Hamburg" }],
-    "updated": "2025-12-01"
+    "short": "Alle Verträge, Gutachten und Senatsbeschlüsse der Stadt frei zugänglich online.",
+    "title": "[TESTDATEN] Transparenzportal Hamburg",
+    "updated": "2025-12-01T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-transparenzportal-hh/"
   },
   {
-    "id": "test-eakte-gescheitert",
+    "categories": [
+      "digitale-infrastruktur",
+      "buergerbeteiligung"
+    ],
+    "id": "test-freifunk-community-mesh",
     "lang": "de",
-    "title": "[TESTDATEN] Gescheiterte eAkte-Einführung",
-    "short": "Millionenprojekt zur digitalen Aktenführung wurde nach Fehlplanung und Widerstand der Verwaltung eingestellt.",
-    "categories": ["digitalisierung"],
-    "rating": "cautionary",
-    "locations": [{ "lat": 52.3759, "lon": 9.7320, "label": "Hannover" }],
-    "updated": "2025-05-18"
+    "locations": [
+      {
+        "label": "Berlin",
+        "lat": 52.52,
+        "lon": 13.405
+      },
+      {
+        "label": "Hamburg",
+        "lat": 53.5511,
+        "lon": 9.9937
+      },
+      {
+        "label": "München",
+        "lat": 48.1351,
+        "lon": 11.582
+      },
+      {
+        "label": "Frankfurt",
+        "lat": 50.1109,
+        "lon": 8.6821
+      }
+    ],
+    "rating": "promising",
+    "short": "Bürger*inneninitiative baut freies WLAN-Mesh-Netzwerk in mehreren Städten auf.",
+    "title": "[TESTDATEN] Freifunk Community-Netz",
+    "updated": "2025-11-03T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-freifunk-community-mesh/"
   },
   {
+    "categories": [
+      "ueberwachung",
+      "ki",
+      "freiheitsrechte"
+    ],
+    "id": "test-ueberwachung-algorithmus-koeln",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Köln",
+        "lat": 50.9375,
+        "lon": 6.9603
+      },
+      {
+        "label": "Düsseldorf",
+        "lat": 51.2277,
+        "lon": 6.7735
+      }
+    ],
+    "rating": "cautionary",
+    "short": "Einsatz algorithmischer Kriminalitätsprognosen ohne ausreichende Transparenz oder Evaluierung.",
+    "title": "[TESTDATEN] Predictive Policing Pilotprojekt",
+    "updated": "2025-10-05T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-ueberwachung-algorithmus-koeln/"
+  },
+  {
+    "categories": [
+      "bildung",
+      "open-source",
+      "digitalisierung"
+    ],
+    "id": "test-schuldigitalisierung-bw",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Stuttgart",
+        "lat": 48.7758,
+        "lon": 9.1829
+      },
+      {
+        "label": "Karlsruhe",
+        "lat": 49.0069,
+        "lon": 8.4037
+      },
+      {
+        "label": "Freiburg",
+        "lat": 47.999,
+        "lon": 7.8421
+      }
+    ],
+    "rating": "flawed-execution",
+    "short": "Landesweites Programm zur digitalen Ausstattung von Schulen mit Moodle und BigBlueButton.",
+    "title": "[TESTDATEN] Schuldigitalisierung Baden-Württemberg",
+    "updated": "2025-09-20T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-schuldigitalisierung-bw/"
+  },
+  {
+    "categories": [
+      "smart-city",
+      "open-data",
+      "digitale-infrastruktur"
+    ],
     "id": "test-lora-sensornetz-zuerich",
     "lang": "de",
-    "title": "[TESTDATEN] LoRa-Sensornetzwerk Zürich",
-    "short": "Offenes IoT-Netzwerk für Umweltdaten mit Echtzeit-Zugang für die Öffentlichkeit.",
-    "categories": ["smart-city", "open-data", "digitale-infrastruktur"],
+    "locations": [
+      {
+        "label": "Zürich",
+        "lat": 47.3769,
+        "lon": 8.5417
+      }
+    ],
     "rating": "promising",
-    "locations": [{ "lat": 47.3769, "lon": 8.5417, "label": "Zürich" }],
-    "updated": "2025-09-12"
+    "short": "Offenes IoT-Netzwerk für Umweltdaten mit Echtzeit-Zugang für die Öffentlichkeit.",
+    "title": "[TESTDATEN] LoRa-Sensornetzwerk Zürich",
+    "updated": "2025-09-12T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-lora-sensornetz-zuerich/"
+  },
+  {
+    "categories": [
+      "digitalisierung",
+      "smart-city"
+    ],
+    "id": "test-cluster-ruhrgebiet",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Essen",
+        "lat": 51.4556,
+        "lon": 7.0116
+      },
+      {
+        "label": "Dortmund",
+        "lat": 51.5136,
+        "lon": 7.4653
+      },
+      {
+        "label": "Bochum",
+        "lat": 51.4818,
+        "lon": 7.2162
+      },
+      {
+        "label": "Duisburg",
+        "lat": 51.4344,
+        "lon": 6.7624
+      },
+      {
+        "label": "Hagen",
+        "lat": 51.367,
+        "lon": 7.4633
+      },
+      {
+        "label": "Gelsenkirchen",
+        "lat": 51.4508,
+        "lon": 7.0131
+      }
+    ],
+    "rating": "promising",
+    "short": "Gemeinsame Digitalisierungsstrategie der Ruhrgebietskommunen mit geteilter Infrastruktur.",
+    "title": "[TESTDATEN] Digitalisierungsoffensive Ruhrgebiet",
+    "updated": "2025-06-01T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-cluster-ruhrgebiet/"
+  },
+  {
+    "categories": [
+      "digitalisierung"
+    ],
+    "id": "test-eakte-gescheitert",
+    "lang": "de",
+    "locations": [
+      {
+        "label": "Hannover",
+        "lat": 52.3759,
+        "lon": 9.732
+      }
+    ],
+    "rating": "cautionary",
+    "short": "Millionenprojekt zur digitalen Aktenführung wurde nach Fehlplanung und Widerstand der Verwaltung eingestellt.",
+    "title": "[TESTDATEN] Gescheiterte eAkte-Einführung",
+    "updated": "2025-05-18T00:00:00Z",
+    "url": "https://commons-and-code.eu/de/fallbeispiele/test-eakte-gescheitert/"
+  },
+  {
+    "categories": [
+      "buergerbeteiligung",
+      "open-source",
+      "transparenz"
+    ],
+    "id": "test-barcelona-decidim",
+    "lang": "en",
+    "locations": [
+      {
+        "label": "Barcelona",
+        "lat": 41.3851,
+        "lon": 2.1734
+      }
+    ],
+    "rating": "best-practice",
+    "short": "Open-source civic participation platform enabling residents to shape urban policy.",
+    "title": "[TEST DATA] Barcelona Decidim Participation Platform",
+    "updated": "2025-11-15T00:00:00Z",
+    "url": "https://commons-and-code.eu/en/fallbeispiele/test-barcelona-decidim/"
+  },
+  {
+    "categories": [
+      "digitalisierung",
+      "open-source",
+      "buergerdienste"
+    ],
+    "id": "test-e-government-tallinn",
+    "lang": "en",
+    "locations": [
+      {
+        "label": "Tallinn",
+        "lat": 59.437,
+        "lon": 24.7536
+      }
+    ],
+    "rating": "best-practice",
+    "short": "Comprehensive digital services for residents, from voting to healthcare, built on open-source infrastructure.",
+    "title": "[TEST DATA] Tallinn e-Government Platform",
+    "updated": "2025-08-30T00:00:00Z",
+    "url": "https://commons-and-code.eu/en/fallbeispiele/test-e-government-tallinn/"
+  },
+  {
+    "categories": [
+      "freiheitsrechte",
+      "ueberwachung",
+      "datenschutz"
+    ],
+    "id": "test-facial-recognition-ban-amsterdam",
+    "lang": "en",
+    "locations": [
+      {
+        "label": "Amsterdam",
+        "lat": 52.3676,
+        "lon": 4.9041
+      }
+    ],
+    "rating": "best-practice",
+    "short": "City council votes to suspend all facial recognition technology in public spaces pending regulation.",
+    "title": "[TEST DATA] Facial Recognition Moratorium Amsterdam",
+    "updated": "2025-07-12T00:00:00Z",
+    "url": "https://commons-and-code.eu/en/fallbeispiele/test-facial-recognition-ban-amsterdam/"
   }
 ]
