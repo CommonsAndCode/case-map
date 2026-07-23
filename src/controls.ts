@@ -1,11 +1,11 @@
 // Controls — map UI buttons.
 //
-// - "Load detailed map tiles": privacy opt-in. Loads VersaTiles vector
-//   tiles (an external server). Optional "remember" checkbox persists
-//   the choice to localStorage for auto-load on next visit.
-// - Theme toggle: light/dark.
-// - Recenter: return to the default bounds.
-// - Fullscreen: toggle fullscreen.
+// Two separate UI elements:
+// 1. A small top-left control group (theme toggle, recenter).
+// 2. A prominent, centered "load detailed tiles" prompt shown over the
+//    fallback basemap until the user opts in. Explains that loading
+//    detailed tiles fetches data from a third-party server (VersaTiles),
+//    with an optional "remember this choice" checkbox.
 //
 // MapLibre's built-in NavigationControl provides +/- zoom buttons.
 
@@ -28,35 +28,16 @@ export function initControls(
   onThemeChange: (next: Theme) => void,
   onTilesLoad: () => void,
 ): ControlsController {
-  container.className = "topleft-controls";
-  container.setAttribute("role", "group");
-  container.setAttribute("aria-label", t("appTitle"));
+  container.className = "controls-root";
 
-  // --- Load detailed tiles button + remember checkbox ---
-  const tilesBtn = document.createElement("button");
-  tilesBtn.type = "button";
-  tilesBtn.className = "control-btn control-btn--tiles";
-  tilesBtn.textContent = t("loadTiles");
-  tilesBtn.title = t("loadTilesHint");
+  // --- Small top-left control group (theme toggle, recenter) ---
+  const smallGroup = document.createElement("div");
+  smallGroup.className = "topleft-controls";
+  smallGroup.setAttribute("role", "group");
+  smallGroup.setAttribute("aria-label", t("appTitle"));
+  container.appendChild(smallGroup);
 
-  const rememberLabel = document.createElement("label");
-  rememberLabel.className = "tiles-remember";
-  const rememberCheckbox = document.createElement("input");
-  rememberCheckbox.type = "checkbox";
-  const rememberText = document.createElement("span");
-  rememberText.textContent = t("rememberChoice");
-  rememberLabel.append(rememberCheckbox, rememberText);
-
-  tilesBtn.addEventListener("click", () => {
-    mapController.loadTiles();
-    if (rememberCheckbox.checked) {
-      localStorage.setItem(TILES_STORAGE_KEY, "granted");
-    }
-    setTilesLoaded(true);
-    onTilesLoad();
-  });
-
-  // --- Theme toggle ---
+  // Theme toggle.
   let currentTheme = theme;
   const themeBtn = document.createElement("button");
   themeBtn.type = "button";
@@ -78,7 +59,7 @@ export function initControls(
   });
   updateThemeBtn();
 
-  // --- Recenter ---
+  // Recenter.
   const recenterBtn = document.createElement("button");
   recenterBtn.type = "button";
   recenterBtn.className = "control-btn";
@@ -87,26 +68,64 @@ export function initControls(
   recenterBtn.title = t("recenter");
   recenterBtn.addEventListener("click", () => mapController.recenter());
 
-  // Only show theme toggle if configured.
   if (config.showThemeToggle) {
-    container.appendChild(themeBtn);
+    smallGroup.appendChild(themeBtn);
   }
-  container.appendChild(recenterBtn);
+  smallGroup.appendChild(recenterBtn);
 
-  // Tiles button is shown when tiles config is "ask" and tiles not yet loaded.
-  const tilesContainer = document.createElement("div");
-  tilesContainer.className = "tiles-control";
-  tilesContainer.append(tilesBtn);
+  // --- Prominent "load detailed tiles" prompt (centered overlay) ---
+  const tilesPrompt = document.createElement("div");
+  tilesPrompt.className = "tiles-prompt";
+  tilesPrompt.setAttribute("role", "dialog");
+  tilesPrompt.setAttribute("aria-labelledby", "tiles-prompt-title");
+
+  const promptTitle = document.createElement("h2");
+  promptTitle.id = "tiles-prompt-title";
+  promptTitle.className = "tiles-prompt__title";
+  promptTitle.textContent = t("loadTiles");
+  tilesPrompt.appendChild(promptTitle);
+
+  const promptHint = document.createElement("p");
+  promptHint.className = "tiles-prompt__hint";
+  promptHint.textContent = t("loadTilesHint");
+  tilesPrompt.appendChild(promptHint);
+
+  const promptActions = document.createElement("div");
+  promptActions.className = "tiles-prompt__actions";
+
+  const tilesBtn = document.createElement("button");
+  tilesBtn.type = "button";
+  tilesBtn.className = "tiles-prompt__button";
+  tilesBtn.textContent = t("loadTiles");
+
+  const rememberLabel = document.createElement("label");
+  rememberLabel.className = "tiles-remember";
+  const rememberCheckbox = document.createElement("input");
+  rememberCheckbox.type = "checkbox";
+  const rememberText = document.createElement("span");
+  rememberText.textContent = t("rememberChoice");
+  rememberLabel.append(rememberCheckbox, rememberText);
+
+  promptActions.append(tilesBtn, rememberLabel);
+  tilesPrompt.appendChild(promptActions);
+
+  tilesBtn.addEventListener("click", () => {
+    mapController.loadTiles();
+    if (rememberCheckbox.checked) {
+      localStorage.setItem(TILES_STORAGE_KEY, "granted");
+    }
+    setTilesLoaded(true);
+    onTilesLoad();
+  });
+
+  // Only show the prompt when tiles config is "ask" and not yet loaded.
   if (config.tiles === "ask") {
-    tilesContainer.appendChild(rememberLabel);
+    container.appendChild(tilesPrompt);
   }
-  container.appendChild(tilesContainer);
 
   function setTilesLoaded(loaded: boolean): void {
     if (loaded) {
-      tilesBtn.textContent = t("tilesLoaded");
-      tilesBtn.disabled = true;
-      rememberLabel.hidden = true;
+      tilesPrompt.hidden = true;
     }
   }
 
