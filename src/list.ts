@@ -107,22 +107,11 @@ export function initList(
       expandEl.appendChild(rating);
     }
 
-    // Categories with label.
-    if (entry.categories.length > 0) {
-      const cats = document.createElement("span");
-      cats.className = "case-list__expand-cats";
-      const label = document.createElement("strong");
-      label.textContent = `${t("categories")}: `;
-      cats.appendChild(label);
-      cats.append(entry.categories.map(tCategory).join(" · "));
-      expandEl.appendChild(cats);
-    }
-
     // Updated date.
     if (entry.updated) {
       const updated = document.createElement("span");
       updated.className = "case-list__expand-meta";
-      updated.textContent = `${t("updated")}: ${entry.updated}`;
+      updated.textContent = `${t("updated")}: ${formatDate(entry.updated)}`;
       expandEl.appendChild(updated);
     }
 
@@ -219,4 +208,15 @@ export function initList(
   detail.onClose(() => collapseAll());
 
   return { render, setActive, headerEl: filterMount };
+}
+
+/** Format an ISO date string as a localized human-readable date. */
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(__LANG__, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }

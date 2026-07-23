@@ -191,7 +191,7 @@ export function applyFilter(
 
 function wireClickHandlers(
   map: MapType,
-  onSelectCase: (id: string) => void,
+  onSelectCase: (id: string, coords?: { lon: number; lat: number }) => void,
 ): void {
   map.on("click", CLUSTERS_LAYER, (e) => {
     const features = map.queryRenderedFeatures(e.point, {
@@ -211,7 +211,12 @@ function wireClickHandlers(
           const first = leaves[0] as unknown as {
             properties: CaseFeatureProps;
           };
-          if (first?.properties?.caseId) onSelectCase(first.properties.caseId);
+          if (first?.properties?.caseId) {
+            onSelectCase(first.properties.caseId, {
+              lon: first.properties.lon,
+              lat: first.properties.lat,
+            });
+          }
         });
       } else {
         const coords = (cluster.geometry as GeoJSON.Point).coordinates;
@@ -225,7 +230,10 @@ function wireClickHandlers(
       | { properties: CaseFeatureProps }
       | undefined;
     if (feature?.properties?.caseId) {
-      onSelectCase(feature.properties.caseId);
+      onSelectCase(feature.properties.caseId, {
+        lon: feature.properties.lon,
+        lat: feature.properties.lat,
+      });
     }
   });
 
@@ -277,7 +285,7 @@ export interface MapController {
   setFilter: (filter: FilterState) => void;
   setTheme: (theme: Theme, cases: CaseEntry[], filter: FilterState) => void;
   recenter: () => void;
-  flyToCase: (entry: CaseEntry) => void;
+  flyToCase: (entry: CaseEntry, coords?: { lon: number; lat: number }) => void;
   loadTiles: () => void;
   destroy: () => void;
 }
@@ -292,7 +300,7 @@ export function initMap(
   theme: Theme,
   cases: CaseEntry[],
   filter: FilterState,
-  onSelectCase: (id: string) => void,
+  onSelectCase: (id: string, coords?: { lon: number; lat: number }) => void,
 ): MapController {
   // Track the latest cases + filter so the 'load' event and
   // loadTiles() always use current data, not stale closure values.
@@ -379,14 +387,17 @@ export function initMap(
         zoom: 3,
       });
     },
-    flyToCase(entry: CaseEntry) {
+    flyToCase(entry: CaseEntry, coords?: { lon: number; lat: number }) {
       if (entry.locations.length === 0) return;
-      const loc = entry.locations[0];
+      // Use the marker's actual (jittered) coordinates if provided,
+      // otherwise fall back to the first location.
+      const target = coords ?? entry.locations[0];
+      const center: [number, number] = [target.lon, target.lat];
       const reduced = prefersReducedMotion();
       if (reduced) {
-        map.jumpTo({ center: [loc.lon, loc.lat], zoom: 12 });
+        map.jumpTo({ center, zoom: 12 });
       } else {
-        map.flyTo({ center: [loc.lon, loc.lat], zoom: 12 });
+        map.flyTo({ center, zoom: 12 });
       }
     },
     loadTiles() {

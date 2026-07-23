@@ -98,7 +98,7 @@ async function main(): Promise<void> {
   let mapController: MapController | null = null;
 
   // Selection handler: expand detail in list + fly map.
-  const onSelect = (id: string): void => {
+  const onSelect = (id: string, coords?: { lon: number; lat: number }): void => {
     const state = getState();
     const entry = state.cases.find((c) => c.id === id) ?? null;
     setState({ selectedId: id });
@@ -107,7 +107,7 @@ async function main(): Promise<void> {
         `.case-list__button[data-case-id="${CSS.escape(id)}"]`,
       );
       detail.open(entry, trigger ?? undefined);
-      mapController?.flyToCase(entry);
+      mapController?.flyToCase(entry, coords);
     }
   };
 
