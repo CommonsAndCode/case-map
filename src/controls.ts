@@ -115,8 +115,8 @@ export function initControls(
       link.href = safePrivacy;
       link.target = "_blank";
       link.rel = "noopener";
-      link.textContent = t("privacy");
-      const suffix = __LANG__ === "de" ? " für Details." : " for details.";
+      link.textContent = t("privacyPolicy");
+      const suffix = __LANG__ === "de" ? "." : " for details.";
       promptHint.append(t("loadTilesHint"), " ");
       promptHint.appendChild(link);
       promptHint.appendChild(document.createTextNode(suffix));
