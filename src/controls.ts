@@ -1,22 +1,22 @@
-// Controls — map UI buttons.
+// Controls — map UI buttons and the "load detailed tiles" consent dialog.
 //
-// Two separate UI elements:
-// 1. A small top-left control group (theme toggle, recenter).
-// 2. A prominent, centered "load detailed tiles" prompt shown over the
-//    fallback basemap until the user opts in. Explains that loading
-//    detailed tiles fetches data from a third-party server (VersaTiles),
-//    with an optional "remember this choice" checkbox.
+// Three floating overlays on the map:
+// 1. Top-left: theme toggle + recenter.
+// 2. Top-right: propose-a-case (+) link.
+// 3. Centered: "load detailed tiles" consent dialog (until opted in).
 //
-// MapLibre's built-in NavigationControl provides +/- zoom buttons.
+// The consent dialog explains that loading detailed tiles fetches data
+// from a third-party server (tiles.versatiles.org), links to the privacy
+// policy, has a "remember" checkbox, and an X close button.
 
 import type { AppConfig, Theme } from "./types.ts";
 import { t } from "./i18n.ts";
+import { sanitiseUrl } from "./config.ts";
 import type { MapController } from "./map.ts";
 
 const TILES_STORAGE_KEY = "cc-map-tiles-consent";
 
 export interface ControlsController {
-  /** Update the tile button state after loading. */
   setTilesLoaded: (loaded: boolean) => void;
 }
 
@@ -30,14 +30,13 @@ export function initControls(
 ): ControlsController {
   container.className = "controls-root";
 
-  // --- Small top-left control group (theme toggle, recenter) ---
-  const smallGroup = document.createElement("div");
-  smallGroup.className = "topleft-controls";
-  smallGroup.setAttribute("role", "group");
-  smallGroup.setAttribute("aria-label", t("appTitle"));
-  container.appendChild(smallGroup);
+  // --- Top-left: theme toggle + recenter ---
+  const topleft = document.createElement("div");
+  topleft.className = "floating-controls floating-controls--topleft";
+  topleft.setAttribute("role", "group");
+  topleft.setAttribute("aria-label", t("appTitle"));
+  container.appendChild(topleft);
 
-  // Theme toggle.
   let currentTheme = theme;
   const themeBtn = document.createElement("button");
   themeBtn.type = "button";
@@ -50,7 +49,7 @@ export function initControls(
       "aria-label",
       isDark ? t("lightMode") : t("darkMode"),
     );
-    themeBtn.title = isDark ? "Dark" : "Light";
+    themeBtn.title = isDark ? "Light" : "Dark";
   }
   themeBtn.addEventListener("click", () => {
     currentTheme = currentTheme === "dark" ? "light" : "dark";
@@ -59,7 +58,6 @@ export function initControls(
   });
   updateThemeBtn();
 
-  // Recenter.
   const recenterBtn = document.createElement("button");
   recenterBtn.type = "button";
   recenterBtn.className = "control-btn";
@@ -68,84 +66,118 @@ export function initControls(
   recenterBtn.title = t("recenter");
   recenterBtn.addEventListener("click", () => mapController.recenter());
 
-  if (config.showThemeToggle) {
-    smallGroup.appendChild(themeBtn);
-  }
-  smallGroup.appendChild(recenterBtn);
+  if (config.showThemeToggle) topleft.appendChild(themeBtn);
+  topleft.appendChild(recenterBtn);
 
-  // Propose-a-case link (external URL → opens in a new tab).
-  if (config.proposeUrl) {
+  // --- Top-right: propose-a-case (+) link ---
+  const proposeUrl = config.proposeUrl
+    ? sanitiseUrl(config.proposeUrl)
+    : null;
+  if (proposeUrl) {
+    const topright = document.createElement("div");
+    topright.className = "floating-controls floating-controls--topright";
+    container.appendChild(topright);
+
     const proposeLink = document.createElement("a");
-    proposeLink.href = config.proposeUrl;
+    proposeLink.href = proposeUrl;
     proposeLink.target = "_blank";
     proposeLink.rel = "noopener";
     proposeLink.className = "control-btn control-btn--propose";
     proposeLink.textContent = "+";
     proposeLink.setAttribute("aria-label", t("proposeCase"));
     proposeLink.title = t("proposeCase");
-    smallGroup.appendChild(proposeLink);
+    topright.appendChild(proposeLink);
   }
 
-  // --- Prominent "load detailed tiles" prompt (centered overlay) ---
-  const tilesPrompt = document.createElement("div");
-  tilesPrompt.className = "tiles-prompt";
-  tilesPrompt.setAttribute("role", "dialog");
-  tilesPrompt.setAttribute("aria-labelledby", "tiles-prompt-title");
+  // --- Centered: "load detailed tiles" consent dialog ---
+  let tilesPrompt: HTMLElement | null = null;
 
-  const promptTitle = document.createElement("h2");
-  promptTitle.id = "tiles-prompt-title";
-  promptTitle.className = "tiles-prompt__title";
-  promptTitle.textContent = t("loadTiles");
-  tilesPrompt.appendChild(promptTitle);
-
-  const promptHint = document.createElement("p");
-  promptHint.className = "tiles-prompt__hint";
-  promptHint.textContent = t("loadTilesHint");
-  tilesPrompt.appendChild(promptHint);
-
-  const promptActions = document.createElement("div");
-  promptActions.className = "tiles-prompt__actions";
-
-  const tilesBtn = document.createElement("button");
-  tilesBtn.type = "button";
-  tilesBtn.className = "tiles-prompt__button";
-  tilesBtn.textContent = t("loadTiles");
-
-  const rememberLabel = document.createElement("label");
-  rememberLabel.className = "tiles-remember";
-  const rememberCheckbox = document.createElement("input");
-  rememberCheckbox.type = "checkbox";
-  const rememberText = document.createElement("span");
-  rememberText.textContent = t("rememberChoice");
-  rememberLabel.append(rememberCheckbox, rememberText);
-
-  promptActions.append(tilesBtn, rememberLabel);
-  tilesPrompt.appendChild(promptActions);
-
-  tilesBtn.addEventListener("click", () => {
-    mapController.loadTiles();
-    if (rememberCheckbox.checked) {
-      localStorage.setItem(TILES_STORAGE_KEY, "granted");
-    } else {
-      // Explicitly clear any stale consent so next visit asks again.
-      localStorage.removeItem(TILES_STORAGE_KEY);
-    }
-    setTilesLoaded(true);
-    onTilesLoad();
-  });
-
-  // Only show the prompt when tiles config is "ask" and not yet loaded.
   if (config.tiles === "ask") {
-    container.appendChild(tilesPrompt);
-  }
+    tilesPrompt = document.createElement("div");
+    tilesPrompt.className = "tiles-prompt";
+    tilesPrompt.setAttribute("role", "dialog");
+    tilesPrompt.setAttribute("aria-modal", "false");
+    tilesPrompt.setAttribute("aria-labelledby", "tiles-prompt-title");
 
-  function setTilesLoaded(loaded: boolean): void {
-    if (loaded) {
-      tilesPrompt.hidden = true;
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "tiles-prompt__close";
+    closeBtn.setAttribute("aria-label", t("close"));
+    closeBtn.textContent = "✕";
+    tilesPrompt.appendChild(closeBtn);
+
+    const promptTitle = document.createElement("h2");
+    promptTitle.id = "tiles-prompt-title";
+    promptTitle.className = "tiles-prompt__title";
+    promptTitle.textContent = t("loadTiles");
+    tilesPrompt.appendChild(promptTitle);
+
+    const promptHint = document.createElement("p");
+    promptHint.className = "tiles-prompt__hint";
+
+    // Hint text with an inline privacy-policy link.
+    const safePrivacy = config.privacyUrl
+      ? sanitiseUrl(config.privacyUrl)
+      : null;
+    if (safePrivacy) {
+      const link = document.createElement("a");
+      link.href = safePrivacy;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = t("privacy");
+      promptHint.append(t("loadTilesHint"), " ");
+      const before = promptHint.lastChild;
+      promptHint.appendChild(link);
+      promptHint.appendChild(document.createTextNode("."));
+      void before;
+    } else {
+      promptHint.textContent = t("loadTilesHint");
     }
+    tilesPrompt.appendChild(promptHint);
+
+    const promptActions = document.createElement("div");
+    promptActions.className = "tiles-prompt__actions";
+
+    const tilesBtn = document.createElement("button");
+    tilesBtn.type = "button";
+    tilesBtn.className = "tiles-prompt__button";
+    tilesBtn.textContent = t("loadTiles");
+
+    const rememberLabel = document.createElement("label");
+    rememberLabel.className = "tiles-remember";
+    const rememberCheckbox = document.createElement("input");
+    rememberCheckbox.type = "checkbox";
+    const rememberText = document.createElement("span");
+    rememberText.textContent = t("rememberChoice");
+    rememberLabel.append(rememberCheckbox, rememberText);
+
+    promptActions.append(tilesBtn, rememberLabel);
+    tilesPrompt.appendChild(promptActions);
+    container.appendChild(tilesPrompt);
+
+    const dismiss = (): void => {
+      if (tilesPrompt) tilesPrompt.hidden = true;
+    };
+
+    tilesBtn.addEventListener("click", () => {
+      mapController.loadTiles();
+      if (rememberCheckbox.checked) {
+        localStorage.setItem(TILES_STORAGE_KEY, "granted");
+      } else {
+        localStorage.removeItem(TILES_STORAGE_KEY);
+      }
+      dismiss();
+      onTilesLoad();
+    });
+
+    closeBtn.addEventListener("click", dismiss);
   }
 
-  return { setTilesLoaded };
+  return {
+    setTilesLoaded(_loaded: boolean) {
+      if (tilesPrompt && _loaded) tilesPrompt.hidden = true;
+    },
+  };
 }
 
 /** Whether the visitor previously granted tile loading. */

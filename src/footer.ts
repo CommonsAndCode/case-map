@@ -1,34 +1,36 @@
-// Footer — legal links. Standalone mode only.
+// Floating legal links — bottom-left overlay on the map.
+// Replaces the old bottom footer bar.
 
 import type { AppConfig } from "./types.ts";
 import { t } from "./i18n.ts";
 
-export function initFooter(container: HTMLElement, config: AppConfig): void {
-  container.className = "app-footer";
+export function initFooterLinks(container: HTMLElement, config: AppConfig): void {
+  container.className = "floating-links";
   container.setAttribute("role", "contentinfo");
 
-  const inner = document.createElement("div");
-  inner.className = "app-footer__inner";
-
-  const hasLinks = config.privacyUrl || config.imprintUrl;
-  if (hasLinks) {
-    const nav = document.createElement("nav");
-    nav.className = "app-footer__links";
-    nav.setAttribute("aria-label", t("privacy"));
-    if (config.privacyUrl) {
-      const a = document.createElement("a");
-      a.href = config.privacyUrl;
-      a.textContent = t("privacy");
-      nav.appendChild(a);
-    }
-    if (config.imprintUrl) {
-      const a = document.createElement("a");
-      a.href = config.imprintUrl;
-      a.textContent = t("imprint");
-      nav.appendChild(a);
-    }
-    inner.appendChild(nav);
+  if (config.privacyUrl) {
+    const a = document.createElement("a");
+    a.href = config.privacyUrl;
+    a.textContent = t("privacy");
+    a.target = "_blank";
+    a.rel = "noopener";
+    container.appendChild(a);
   }
 
-  container.appendChild(inner);
+  if (config.privacyUrl && config.imprintUrl) {
+    const sep = document.createElement("span");
+    sep.className = "floating-links__sep";
+    sep.setAttribute("aria-hidden", "true");
+    sep.textContent = "·";
+    container.appendChild(sep);
+  }
+
+  if (config.imprintUrl) {
+    const a = document.createElement("a");
+    a.href = config.imprintUrl;
+    a.textContent = t("imprint");
+    a.target = "_blank";
+    a.rel = "noopener";
+    container.appendChild(a);
+  }
 }

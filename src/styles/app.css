@@ -31,7 +31,6 @@
   --default-font-family: "Raleway", ui-sans-serif, system-ui, sans-serif;
   --heading-font-family: "Share Tech", sans-serif;
 
-  /* Rating dot colours — Wong colourblind-safe palette */
   --rating-best-practice: #009e73;
   --rating-promising: #0072b2;
   --rating-flawed-execution: #e69f00;
@@ -55,8 +54,8 @@
   --cc-primary: #2a6df4;
   --accent: #111;
 
-  --footer-bg: rgba(0, 0, 0, 0.04);
-  --footer-border: rgba(0, 0, 0, 0.12);
+  --overlay-bg: rgba(255, 255, 255, 0.92);
+  --overlay-border: rgba(0, 0, 0, 0.12);
 }
 
 html[data-theme="dark"] {
@@ -78,8 +77,8 @@ html[data-theme="dark"] {
 
   --accent: #fdc220;
 
-  --footer-bg: rgba(0, 0, 0, 0.4);
-  --footer-border: rgba(255, 255, 255, 0.16);
+  --overlay-bg: rgba(26, 18, 36, 0.9);
+  --overlay-border: rgba(255, 255, 255, 0.16);
 }
 
 html[data-theme="dark"] .detail-panel__rating[data-rating="best-practice"] {
@@ -156,18 +155,16 @@ html[data-theme="dark"] a {
 /* --- Layout --- */
 #app {
   display: grid;
-  grid-template:
-    "map list" 1fr
-    "footer footer" auto / 1fr 320px;
+  grid-template: "map list" 1fr / 1fr 340px;
   height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 @media (max-width: 768px) {
   #app {
     grid-template:
       "map" 1fr
-      "list" auto
-      "footer" auto / 1fr;
+      "list" 200px / 1fr;
   }
 }
 
@@ -180,43 +177,58 @@ html[data-theme="dark"] a {
   outline: none;
 }
 .map:focus-within {
-  outline: 3px solid var(--focus-color);
+  outline: none;
 }
 
-/* --- Overlays (controls, filter, detail) --- */
-.controls-overlay {
+/* --- Logo (top-left of map) --- */
+.app-logo {
   position: absolute;
-  z-index: 500;
-  pointer-events: none;
-}
-.controls-overlay > * {
-  pointer-events: auto;
-}
-.controls-overlay--topleft {
   top: 10px;
   left: 10px;
+  z-index: 500;
+  display: block;
 }
-.controls-overlay--topright {
-  top: 10px;
-  right: 10px;
+.app-logo img {
+  height: 40px;
+  width: auto;
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+html[data-theme="dark"] .app-logo img {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  opacity: 0.8;
 }
 
-/* --- Controls (buttons) --- */
+/* --- Floating controls --- */
 .controls-root {
   pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 500;
 }
 .controls-root > * {
   pointer-events: auto;
 }
-.topleft-controls {
+.floating-controls {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  background: var(--app-content-bg);
-  border: 1px solid var(--app-border-color);
-  border-radius: 6px;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--overlay-border);
+  border-radius: 8px;
   padding: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.floating-controls--topleft {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.floating-controls--topright {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .control-btn {
   display: inline-flex;
@@ -225,11 +237,12 @@ html[data-theme="dark"] a {
   width: 36px;
   height: 36px;
   border: none;
-  border-radius: 4px;
-  background: var(--app-content-bg);
+  border-radius: 6px;
+  background: transparent;
   color: var(--text-color);
   font-size: 18px;
   cursor: pointer;
+  text-decoration: none;
 }
 .control-btn:hover {
   background: var(--hover-bg);
@@ -239,13 +252,45 @@ html[data-theme="dark"] a {
   outline-offset: 2px;
 }
 .control-btn--propose {
-  text-decoration: none;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   line-height: 1;
 }
 
-/* --- "Load detailed map" prompt (prominent centered overlay) --- */
+/* --- Floating privacy/imprint links (bottom-left of map) --- */
+.floating-links {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--overlay-border);
+  border-radius: 6px;
+  font-size: 11px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.floating-links a {
+  color: var(--text-color);
+  text-decoration: underline;
+  opacity: 0.8;
+}
+.floating-links a:hover {
+  opacity: 1;
+}
+.floating-links a:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}
+.floating-links__sep {
+  opacity: 0.4;
+}
+
+/* --- "Load detailed map" consent dialog --- */
 .tiles-prompt {
   position: absolute;
   top: 50%;
@@ -257,11 +302,31 @@ html[data-theme="dark"] a {
   background: var(--app-content-bg);
   border: 1px solid var(--app-border-color);
   border-radius: 12px;
-  padding: 28px 24px;
+  padding: 28px 24px 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 .tiles-prompt[hidden] {
   display: none;
+}
+.tiles-prompt__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 16px;
+  cursor: pointer;
+}
+.tiles-prompt__close:hover {
+  background: var(--hover-bg);
+}
+.tiles-prompt__close:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
 }
 .tiles-prompt__title {
   font-family: var(--heading-font-family);
@@ -275,6 +340,10 @@ html[data-theme="dark"] a {
   color: var(--text-color);
   opacity: 0.85;
   margin: 0 0 20px;
+  text-align: left;
+}
+.tiles-prompt__hint a {
+  text-decoration: underline;
 }
 .tiles-prompt__actions {
   display: flex;
@@ -443,55 +512,9 @@ html[data-theme="dark"] .filter-dropdown__chip.is-active {
   background: var(--rating-unrated);
 }
 
-/* --- Detail panel --- */
+/* --- Detail panel (hidden; rendering is inline in the list) --- */
 .detail-panel {
-  position: absolute;
-  top: 56px;
-  right: 10px;
-  width: 320px;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-  background: var(--app-content-bg);
-  border: 1px solid var(--app-border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  padding: 16px;
-  z-index: 600;
-}
-.detail-panel[hidden] {
   display: none;
-}
-.detail-panel__logo-link {
-  display: block;
-  margin-bottom: 12px;
-}
-.detail-panel__logo {
-  max-height: 40px;
-}
-.detail-panel__close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--text-color);
-  font-size: 16px;
-  cursor: pointer;
-}
-.detail-panel__close:hover {
-  background: var(--hover-bg);
-}
-.detail-panel__close:focus-visible {
-  outline: 2px solid var(--focus-color);
-  outline-offset: 2px;
-}
-.detail-panel__content h2 {
-  font-family: var(--heading-font-family);
-  margin: 0 0 8px;
-  font-size: 18px;
 }
 .detail-panel__rating {
   display: inline-block;
@@ -520,16 +543,6 @@ html[data-theme="dark"] .filter-dropdown__chip.is-active {
 .detail-panel__rating[data-rating="unrated"] {
   background: #eee;
   color: #555;
-}
-.detail-panel__meta {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 8px;
-}
-.detail-panel__link {
-  display: inline-block;
-  margin-top: 12px;
-  font-weight: 600;
 }
 
 /* --- Case list (a11y primary path) --- */
@@ -605,7 +618,7 @@ html[data-theme="dark"] .filter-dropdown__chip.is-active {
   outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
-.case-list__button.is-active {
+.case-list__button[aria-expanded="true"] {
   border-color: var(--cc-primary);
   box-shadow: 0 0 0 1px var(--cc-primary);
 }
@@ -647,33 +660,36 @@ html[data-theme="dark"] .filter-dropdown__chip.is-active {
   font-size: 14px;
 }
 
-/* --- Footer --- */
-.app-footer {
-  grid-area: footer;
-  background: var(--footer-bg);
-  border-top: 1px solid var(--footer-border);
-  padding: 8px 16px;
-  font-size: 12px;
+/* --- Inline detail (expands within a case-list item) --- */
+.case-list__inline-detail {
+  padding: 10px 4px 4px;
 }
-.app-footer__inner {
+.case-list__inline-detail[hidden] {
+  display: none;
+}
+.case-detail-inline {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
 }
-.app-footer__links {
-  display: flex;
-  gap: 12px;
+.case-detail-inline__short {
+  margin: 0;
 }
-.app-footer__links a:focus-visible {
-  outline: 2px solid var(--focus-color);
-  outline-offset: 2px;
-}
-html[data-theme="dark"] .app-footer__links {
-  border-right: 1px solid rgba(255, 255, 255, 0.18);
-}
-.app-footer__note {
+.case-detail-inline__categories {
+  margin: 0;
   opacity: 0.85;
+}
+.case-detail-inline__meta {
+  margin: 0;
+  font-size: 11px;
+  opacity: 0.7;
+}
+.case-detail-inline__link {
+  align-self: flex-start;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 /* --- Error overlay --- */

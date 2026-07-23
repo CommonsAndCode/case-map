@@ -1,35 +1,33 @@
 // Case list — the accessibility-primary path.
 //
 // Renders all (filtered) cases as a semantic <ul> of <li>, each
-// containing a <button> that selects the case (opening the shared
-// detail panel) and flies the map to its first location. Screen-reader
-// and keyboard users get the full content here without needing to
-// operate the 2D map canvas.
+// containing a <button> that selects the case. The selected case
+// expands inline within the list to show full details (rating,
+// description, categories, link) instead of a separate popover.
 //
 // The list has a persistent header (title + count + filter mount point)
 // and a scrollable body. Only the body re-renders on filter changes so
 // the filter popover stays mounted.
 
 import type { CaseEntry } from "./types.ts";
+import type { DetailController } from "./detail.ts";
 import { t, tCategory, tRating } from "./i18n.ts";
+import { sanitiseUrl } from "./config.ts";
 
 export interface ListController {
-  /** Re-render the list body with the given (filtered) cases. */
   render: (cases: CaseEntry[]) => void;
-  /** Highlight the currently-selected case, or clear if null. */
   setActive: (id: string | null) => void;
-  /** Element in the header where the filter popover can mount. */
   headerEl: HTMLElement;
 }
 
 export function initList(
   container: HTMLElement,
   onSelect: (id: string) => void,
+  detail: DetailController,
 ): ListController {
   container.setAttribute("role", "region");
   container.setAttribute("aria-label", t("caseList"));
 
-  // Persistent header (does not re-render).
   const header = document.createElement("div");
   header.className = "case-list__header";
   container.appendChild(header);
@@ -43,15 +41,63 @@ export function initList(
   heading.appendChild(count);
   header.appendChild(heading);
 
-  // Filter mounts here (populated by main.ts via headerEl).
   const filterMount = document.createElement("div");
   filterMount.className = "case-list__filter";
   header.appendChild(filterMount);
 
-  // Scrollable body (re-renders on filter/data change).
   const body = document.createElement("div");
   body.className = "case-list__body";
   container.appendChild(body);
+
+  function renderInlineDetail(entry: CaseEntry): HTMLDivElement {
+    const detailEl = document.createElement("div");
+    detailEl.className = "case-detail-inline";
+
+    if (entry.rating) {
+      const rating = document.createElement("span");
+      rating.className = "detail-panel__rating";
+      rating.setAttribute("data-rating", entry.rating);
+      rating.textContent = tRating(entry.rating);
+      detailEl.appendChild(rating);
+    }
+
+    if (entry.short) {
+      const short = document.createElement("p");
+      short.className = "case-detail-inline__short";
+      short.textContent = entry.short;
+      detailEl.appendChild(short);
+    }
+
+    if (entry.categories.length > 0) {
+      const cats = document.createElement("p");
+      cats.className = "case-detail-inline__categories";
+      const label = document.createElement("strong");
+      label.textContent = `${t("categories")}: `;
+      cats.appendChild(label);
+      cats.append(entry.categories.map(tCategory).join(" · "));
+      detailEl.appendChild(cats);
+    }
+
+    if (entry.updated) {
+      const updated = document.createElement("p");
+      updated.className = "case-detail-inline__meta";
+      updated.textContent = `${t("updated")}: ${entry.updated}`;
+      detailEl.appendChild(updated);
+    }
+
+    const safeUrl = entry.url ? sanitiseUrl(entry.url) : null;
+    if (safeUrl) {
+      const link = document.createElement("a");
+      link.className = "case-detail-inline__link";
+      link.href = safeUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = `${t("readFullCase")} ↗`;
+      detailEl.appendChild(link);
+    }
+
+    return detailEl;
+  }
 
   function renderItem(entry: CaseEntry): HTMLLIElement {
     const li = document.createElement("li");
@@ -62,10 +108,6 @@ export function initList(
     btn.type = "button";
     btn.className = "case-list__button";
     btn.dataset.caseId = entry.id;
-    btn.setAttribute(
-      "aria-label",
-      `${entry.title} — ${tRating(entry.rating ?? "unrated")}`,
-    );
 
     if (entry.rating) {
       const dot = document.createElement("span");
@@ -94,8 +136,23 @@ export function initList(
       btn.appendChild(cats);
     }
 
-    btn.addEventListener("click", () => onSelect(entry.id));
+    btn.addEventListener("click", () => {
+      const isExpanded = li.classList.contains("is-expanded");
+      if (isExpanded) {
+        detail.close();
+      } else {
+        onSelect(entry.id);
+      }
+    });
+
     li.appendChild(btn);
+
+    // Inline detail container (filled on expand).
+    const inlineContainer = document.createElement("div");
+    inlineContainer.className = "case-list__inline-detail";
+    inlineContainer.hidden = true;
+    li.appendChild(inlineContainer);
+
     return li;
   }
 
@@ -120,15 +177,62 @@ export function initList(
     body.appendChild(ul);
   }
 
-  function setActive(id: string | null): void {
-    for (const btn of body.querySelectorAll<HTMLButtonElement>(
-      ".case-list__button",
-    )) {
-      const isActive = btn.dataset.caseId === id;
-      btn.setAttribute("aria-current", isActive ? "true" : "false");
-      btn.classList.toggle("is-active", isActive);
+  // Expand the inline detail for the selected case, collapse all others.
+  function expandDetail(id: string): void {
+    const state = getState();
+    const entry = state.cases.find((c) => c.id === id) ?? null;
+    if (!entry) return;
+
+    for (const li of body.querySelectorAll<HTMLLIElement>(".case-list__item")) {
+      const isActive = li.dataset.caseId === id;
+      const btn = li.querySelector<HTMLButtonElement>(".case-list__button");
+      const inline = li.querySelector<HTMLDivElement>(".case-list__inline-detail");
+
+      li.classList.toggle("is-expanded", isActive);
+      if (btn) {
+        btn.setAttribute("aria-current", isActive ? "true" : "false");
+        btn.setAttribute("aria-expanded", isActive ? "true" : "false");
+      }
+      if (inline) {
+        if (isActive) {
+          inline.innerHTML = "";
+          inline.appendChild(renderInlineDetail(entry));
+          inline.hidden = false;
+        } else {
+          inline.hidden = true;
+          inline.innerHTML = "";
+        }
+      }
     }
   }
 
+  function collapseAll(): void {
+    for (const li of body.querySelectorAll<HTMLLIElement>(".case-list__item")) {
+      li.classList.remove("is-expanded");
+      const btn = li.querySelector<HTMLButtonElement>(".case-list__button");
+      const inline = li.querySelector<HTMLDivElement>(".case-list__inline-detail");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+      if (inline) {
+        inline.hidden = true;
+        inline.innerHTML = "";
+      }
+    }
+  }
+
+  function setActive(id: string | null): void {
+    if (id) {
+      expandDetail(id);
+    } else {
+      collapseAll();
+    }
+  }
+
+  // Subscribe to detail controller so inline expansion stays in sync.
+  detail.onOpen((id) => expandDetail(id));
+  detail.onClose(() => collapseAll());
+
   return { render, setActive, headerEl: filterMount };
 }
+
+// Minimal getState import to avoid circular dependency.
+import { getState } from "./state.ts";

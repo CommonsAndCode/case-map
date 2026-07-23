@@ -1,5 +1,5 @@
-// Entry point. Wires together config, theme, data, map, list, detail,
-// filter, controls, and footer. All UI is built imperatively into the
+// Entry point. Wires together config, theme, data, map, list, filter,
+// controls, and footer links. All UI is built imperatively into the
 // #app container; there is no framework.
 
 import "./styles/app.css";
@@ -18,7 +18,7 @@ import { initList } from "./list.ts";
 import { initDetail } from "./detail.ts";
 import { initFilter } from "./filter.ts";
 import { initControls, tilesConsentRemembered } from "./controls.ts";
-import { initFooter } from "./footer.ts";
+import { initFooterLinks } from "./footer.ts";
 import { t } from "./i18n.ts";
 import type { Theme } from "./types.ts";
 
@@ -27,7 +27,6 @@ async function main(): Promise<void> {
   const initialTheme = getInitialTheme(config.theme);
   applyTheme(initialTheme, config.theme != null);
 
-  // Apply primary colour override.
   if (config.primaryColor) {
     document.documentElement.style.setProperty("--cc-primary", config.primaryColor);
   }
@@ -36,7 +35,21 @@ async function main(): Promise<void> {
   const app = document.getElementById("app")!;
   app.innerHTML = "";
 
-  // Map container (visual path). ARIA set in map.ts via the container.
+  // Logo (top-left corner of map, standalone mode only).
+  if (config.showLogo && config.logoUrl) {
+    const logoLink = document.createElement("a");
+    logoLink.href = config.logoLink ?? "#";
+    logoLink.target = "_blank";
+    logoLink.rel = "noopener";
+    logoLink.className = "app-logo";
+    const img = document.createElement("img");
+    img.src = config.logoUrl;
+    img.alt = "Commons & Code";
+    logoLink.appendChild(img);
+    app.appendChild(logoLink);
+  }
+
+  // Map container (visual path).
   const mapEl = document.createElement("div");
   mapEl.id = "map";
   mapEl.className = "map";
@@ -45,42 +58,42 @@ async function main(): Promise<void> {
   mapEl.setAttribute("aria-label", t("appTitle"));
   app.appendChild(mapEl);
 
-  // Visually-hidden instructions for screen readers / keyboard users.
   const instructions = document.createElement("p");
   instructions.className = "visually-hidden";
   instructions.textContent = t("mapInstructions");
   app.appendChild(instructions);
 
-  // Top-left controls (theme, recenter, load tiles).
+  // Floating controls overlay (theme, recenter, propose, tiles dialog).
   const controlsEl = document.createElement("div");
-  controlsEl.className = "controls-overlay controls-overlay--topleft";
+  controlsEl.className = "controls-root";
   app.appendChild(controlsEl);
 
-  // Detail panel (right side).
+  // Floating privacy/imprint links (bottom-left of map).
+  if (config.privacyUrl || config.imprintUrl) {
+    const footerLinksEl = document.createElement("div");
+    footerLinksEl.className = "floating-links";
+    initFooterLinks(footerLinksEl, config);
+    app.appendChild(footerLinksEl);
+  }
+
+  // Detail panel (hidden, for inline expansion in the case list).
   const detailEl = document.createElement("div");
   detailEl.id = "detail";
+  detailEl.hidden = true;
   app.appendChild(detailEl);
 
-  // Case list (a11y primary path, bottom or side).
+  // Case list (a11y primary path, right side).
   const listEl = document.createElement("div");
   listEl.id = "case-list";
   listEl.className = "case-list";
   app.appendChild(listEl);
-
-  // Footer (standalone only).
-  if (config.showFooter) {
-    const footerEl = document.createElement("footer");
-    footerEl.id = "footer";
-    app.appendChild(footerEl);
-    initFooter(footerEl, config);
-  }
 
   // --- Initialise modules ---
   setState({ theme: initialTheme, loading: true });
 
   let mapController: MapController | null = null;
 
-  // Selection handler: open detail + fly map + set active list item.
+  // Selection handler: expand detail in list + fly map.
   const onSelect = (id: string): void => {
     const state = getState();
     const entry = state.cases.find((c) => c.id === id) ?? null;
@@ -95,7 +108,7 @@ async function main(): Promise<void> {
   };
 
   const detail = initDetail(detailEl, config);
-  const list = initList(listEl, onSelect);
+  const list = initList(listEl, onSelect, detail);
 
   // Filter change handler: update state + map + list.
   const onFilterChange = (filter: typeof DEFAULT_FILTER): void => {
@@ -106,7 +119,6 @@ async function main(): Promise<void> {
     list.render(filtered);
   };
 
-  // Mount the filter popover into the case list header.
   const filterCtl = initFilter(list.headerEl, onFilterChange);
 
   // Initialise the map. WebGL-unavailable → list-only fallback.
@@ -139,8 +151,6 @@ async function main(): Promise<void> {
       setState({ tilesLoaded: true });
     });
 
-    // If config says tiles=on (embedder declared consent) or the visitor
-    // previously remembered consent, load tiles immediately.
     if (config.tiles === "on" || tilesConsentRemembered()) {
       mapController.loadTiles();
       setState({ tilesLoaded: true });

@@ -119,8 +119,8 @@ export function initFilter(
         checked: currentFilter.ratings.includes(r),
         onToggle: (checked) => {
           currentFilter.ratings = checked
-            ? currentFilter.ratings.filter((x) => x !== r)
-            : [...currentFilter.ratings, r];
+            ? [...currentFilter.ratings, r]
+            : currentFilter.ratings.filter((x) => x !== r);
           renderPanel();
           onChange(currentFilter);
         },
@@ -158,8 +158,8 @@ export function initFilter(
           checked: currentFilter.categories.includes(cat),
           onToggle: (checked) => {
             currentFilter.categories = checked
-              ? currentFilter.categories.filter((x) => x !== cat)
-              : [...currentFilter.categories, cat];
+              ? [...currentFilter.categories, cat]
+              : currentFilter.categories.filter((x) => x !== cat);
             renderPanel();
             onChange(currentFilter);
           },

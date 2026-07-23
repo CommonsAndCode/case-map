@@ -18,7 +18,7 @@ const STANDALONE_DEFAULTS: AppConfig = {
   showFooter: true,
   primaryColor: null,
   tiles: "ask",
-  proposeUrl: null,
+  proposeUrl: "https://hub.commons-and-code.eu/apps/forms/s/zWaDHQ728cPJYDbDgBXmmq4F",
 };
 
 const EMBED_DEFAULTS: AppConfig = {
