@@ -238,6 +238,12 @@ html[data-theme="dark"] a {
   outline: 2px solid var(--focus-color);
   outline-offset: 2px;
 }
+.control-btn--propose {
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
 
 /* --- "Load detailed map" prompt (prominent centered overlay) --- */
 .tiles-prompt {

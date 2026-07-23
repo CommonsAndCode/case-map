@@ -73,6 +73,19 @@ export function initControls(
   }
   smallGroup.appendChild(recenterBtn);
 
+  // Propose-a-case link (external URL → opens in a new tab).
+  if (config.proposeUrl) {
+    const proposeLink = document.createElement("a");
+    proposeLink.href = config.proposeUrl;
+    proposeLink.target = "_blank";
+    proposeLink.rel = "noopener";
+    proposeLink.className = "control-btn control-btn--propose";
+    proposeLink.textContent = "+";
+    proposeLink.setAttribute("aria-label", t("proposeCase"));
+    proposeLink.title = t("proposeCase");
+    smallGroup.appendChild(proposeLink);
+  }
+
   // --- Prominent "load detailed tiles" prompt (centered overlay) ---
   const tilesPrompt = document.createElement("div");
   tilesPrompt.className = "tiles-prompt";
