@@ -1,4 +1,4 @@
-// Footer — legal links + "no cookies" note. Standalone mode only.
+// Footer — legal links. Standalone mode only.
 
 import type { AppConfig } from "./types.ts";
 import { t } from "./i18n.ts";
@@ -29,11 +29,6 @@ export function initFooter(container: HTMLElement, config: AppConfig): void {
     }
     inner.appendChild(nav);
   }
-
-  const note = document.createElement("div");
-  note.className = "app-footer__note";
-  note.textContent = t("noCookies");
-  inner.appendChild(note);
 
   container.appendChild(inner);
 }

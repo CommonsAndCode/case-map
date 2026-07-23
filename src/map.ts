@@ -30,10 +30,11 @@ setWorkerUrl(workerUrl);
 
 const BASE_URL = import.meta.env.BASE_URL;
 
-// Europe-focused bounds [[south, west], [north, east]] for maxBounds.
+// Europe-focused bounds [[west, south], [east, north]] for maxBounds.
+// MapLibre uses [lng, lat] order (NOT Leaflet's [lat, lng]).
 const EUROPE_BOUNDS: [[number, number], [number, number]] = [
-  [28, -25],
-  [72, 60],
+  [-25, 28],
+  [60, 72],
 ];
 
 // Cluster + point layer IDs (kept stable across style swaps).
@@ -42,8 +43,9 @@ const CLUSTERS_LAYER = "cc-clusters";
 const CLUSTER_COUNT_LAYER = "cc-cluster-count";
 const UNCLUSTERED_LAYER = "cc-unclustered-points";
 
-// Rating → CSS custom property name. Resolved at runtime so dark-mode
-// overrides apply. Matches the --rating-* vars in app.css.
+// Rating → CSS custom property name. Resolved at runtime via
+// getComputedStyle so dark-mode overrides apply. MapLibre expressions
+// do NOT support CSS var(); we must pass literal color strings.
 const RATING_VARS: Record<string, string> = {
   "best-practice": "--rating-best-practice",
   "promising": "--rating-promising",
@@ -54,13 +56,21 @@ const RATING_VARS: Record<string, string> = {
 
 const ALL_RATINGS = Object.keys(RATING_VARS);
 
+/** Resolve a CSS custom property to a literal color string. */
+function cssVar(name: string): string {
+  return (
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim() ||
+    "#888"
+  );
+}
+
 function ratingColorMatch(): ExpressionSpecification {
   // MapLibre 'match' expression: ["match", ["get","rating"], <rating>, <color>, ..., fallback]
-  const match: ExpressionSpecification[] = [];
+  const match: (string | ExpressionSpecification)[] = [];
   for (const r of ALL_RATINGS) {
-    match.push(["var", RATING_VARS[r]] as ExpressionSpecification);
+    match.push(r, cssVar(RATING_VARS[r]));
   }
-  match.push(["var", RATING_VARS["unrated"]] as ExpressionSpecification);
+  match.push(cssVar(RATING_VARS["unrated"]));
   return ["match", ["get", "rating"], ...match] as unknown as ExpressionSpecification;
 }
 
@@ -95,7 +105,7 @@ function addCasesLayers(
     source: CASES_SOURCE,
     filter: ["has", "point_count"],
     paint: {
-      "circle-color": ["var", "--cc-primary"],
+      "circle-color": cssVar("--cc-primary"),
       "circle-radius": [
         "step",
         ["get", "point_count"],
@@ -108,7 +118,7 @@ function addCasesLayers(
         34,
       ],
       "circle-stroke-width": 2,
-      "circle-stroke-color": ["var", "--app-content-bg"],
+      "circle-stroke-color": cssVar("--app-content-bg"),
       "circle-opacity": 0.85,
     },
   });
@@ -125,7 +135,7 @@ function addCasesLayers(
       "text-allow-overlap": true,
     },
     paint: {
-      "text-color": ["var", "--text-inverse-color"],
+      "text-color": cssVar("--text-inverse-color"),
     },
   });
 
@@ -139,7 +149,7 @@ function addCasesLayers(
       "circle-color": ratingColorMatch(),
       "circle-radius": 7,
       "circle-stroke-width": 1.5,
-      "circle-stroke-color": ["var", "--app-content-bg"],
+      "circle-stroke-color": cssVar("--app-content-bg"),
       "circle-opacity": 0.95,
     },
   });
@@ -286,14 +296,14 @@ export function initMap(
         {
           id: "background",
           type: "background",
-          paint: { "background-color": ["var", "--app-bg"] },
+          paint: { "background-color": cssVar("--app-bg") },
         },
         {
           id: "country-outline",
           type: "line",
           source: "basemap-outline",
           paint: {
-            "line-color": ["var", "--app-border-color"],
+            "line-color": cssVar("--app-border-color"),
             "line-width": ["interpolate", ["linear"], ["zoom"], 0, 0.5, 6, 1],
             "line-opacity": 0.7,
           },
