@@ -2,15 +2,10 @@
 //
 // Fetches cases.json, transforms the case array into a GeoJSON
 // FeatureCollection (one Feature per location) for MapLibre's GeoJSON
-// source, and applies a deterministic jitter to co-located pins so they
-// don't stack exactly on top of each other at high zoom.
-//
-// MapLibre's GeoJSON source does its own clustering; we only feed it the
-// points. The jitter replaces the old supercluster-based jitter in
-// cluster.ts and is kept identical (same hash function + offset math)
-// so existing pin placement is preserved.
+// source. MapLibre's GeoJSON source does its own clustering; we only
+// feed it the points.
 
-import type { CaseEntry } from "./types.ts";
+import type { CaseEntry, FilterState } from "./types.ts";
 
 export type CaseFeatureProps = {
   caseId: string;
@@ -34,90 +29,58 @@ export async function fetchCases(dataUrl: string): Promise<CaseEntry[]> {
 }
 
 /**
- * Simple deterministic hash → float in [0, 1).
- * Used to jitter co-located pins repeatably. (Kept from the original
- * cluster.ts so pin placement is unchanged.)
+ * Filter cases by the given filter state (same logic as state.ts
+ * recomputeFiltered, but kept here so the map module can filter the
+ * GeoJSON source data directly — necessary for clustering to work
+ * correctly with filters).
  */
-function hashToFloat(s: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return ((h >>> 0) % 10000) / 10000;
-}
-
-/**
- * Offset pins that share the exact same coordinates by a few hundred
- * metres in a deterministic direction based on case ID + location index.
- */
-function jitterColocated(
-  points: { coords: [number, number]; caseId: string }[],
-): [number, number][] {
-  // ~300m offset in degrees at ~50° latitude.
-  const OFFSET = 0.003;
-
-  // Group by coordinate key.
-  const groups = new Map<string, number[]>();
-  for (let i = 0; i < points.length; i++) {
-    const [lon, lat] = points[i].coords;
-    const key = `${lat},${lon}`;
-    let g = groups.get(key);
-    if (!g) {
-      g = [];
-      groups.set(key, g);
+export function filterCasesForMap(
+  cases: CaseEntry[],
+  filter: FilterState,
+): CaseEntry[] {
+  return cases.filter((c) => {
+    if (filter.ratings.length > 0) {
+      const r = c.rating ?? "unrated";
+      if (!filter.ratings.includes(r)) return false;
     }
-    g.push(i);
-  }
-
-  const result = points.map((p) => [...p.coords] as [number, number]);
-  for (const indices of groups.values()) {
-    if (indices.length < 2) continue;
-    for (const idx of indices) {
-      const id = points[idx].caseId;
-      const angle = hashToFloat(id) * 2 * Math.PI;
-      const dist = 0.5 + hashToFloat(id + ":r") * 0.5; // 50–100% of OFFSET
-      result[idx][0] += Math.cos(angle) * OFFSET * dist;
-      result[idx][1] += Math.sin(angle) * OFFSET * dist;
+    if (filter.categories.length > 0) {
+      const cats = c.categories ?? [];
+      for (const sel of filter.categories) {
+        if (!cats.includes(sel)) return false;
+      }
     }
-  }
-  return result;
+    return true;
+  });
 }
 
 /**
  * Transform cases into a GeoJSON FeatureCollection, one Feature per
- * location, with co-located pins jittered apart.
+ * location. Co-located points are left at their exact coordinates —
+ * MapLibre's native clustering handles them (cluster click → expand
+ * or select first leaf).
  */
 export function casesToGeoJSON(cases: CaseEntry[]): GeoJSON.FeatureCollection<
   GeoJSON.Point,
   CaseFeatureProps
 > {
-  const flat: { coords: [number, number]; caseId: string; entry: CaseEntry }[] =
-    [];
+  const features: CaseFeature[] = [];
   for (const c of cases) {
     for (const loc of c.locations) {
-      flat.push({
-        coords: [loc.lon, loc.lat],
-        caseId: c.id,
-        entry: c,
+      features.push({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [loc.lon, loc.lat] },
+        properties: {
+          caseId: c.id,
+          title: c.title,
+          short: c.short,
+          rating: c.rating ?? "unrated",
+          url: c.url ?? "",
+          categories: c.categories ?? [],
+        },
       });
     }
   }
 
-  const jittered = jitterColocated(flat);
-
-  const features: CaseFeature[] = flat.map((p, i) => ({
-    type: "Feature",
-    geometry: { type: "Point", coordinates: jittered[i] },
-    properties: {
-      caseId: p.entry.id,
-      title: p.entry.title,
-      short: p.entry.short,
-      rating: p.entry.rating ?? "unrated",
-      url: p.entry.url ?? "",
-      categories: p.entry.categories ?? [],
-    },
-  }));
-
   return { type: "FeatureCollection", features };
 }
+

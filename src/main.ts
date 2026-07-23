@@ -35,20 +35,6 @@ async function main(): Promise<void> {
   const app = document.getElementById("app")!;
   app.innerHTML = "";
 
-  // Logo (top-left corner of map, standalone mode only).
-  if (config.showLogo && config.logoUrl) {
-    const logoLink = document.createElement("a");
-    logoLink.href = config.logoLink ?? "#";
-    logoLink.target = "_blank";
-    logoLink.rel = "noopener";
-    logoLink.className = "app-logo";
-    const img = document.createElement("img");
-    img.src = config.logoUrl;
-    img.alt = "Commons & Code";
-    logoLink.appendChild(img);
-    app.appendChild(logoLink);
-  }
-
   // Map container (visual path).
   const mapEl = document.createElement("div");
   mapEl.id = "map";
@@ -76,17 +62,35 @@ async function main(): Promise<void> {
     app.appendChild(footerLinksEl);
   }
 
-  // Detail panel (hidden, for inline expansion in the case list).
-  const detailEl = document.createElement("div");
-  detailEl.id = "detail";
-  detailEl.hidden = true;
-  app.appendChild(detailEl);
+  // Right sidebar: logo + case list.
+  const sidebarEl = document.createElement("div");
+  sidebarEl.className = "sidebar";
+  app.appendChild(sidebarEl);
+
+  if (config.showLogo && config.logoUrl) {
+    const logoLink = document.createElement("a");
+    logoLink.href = config.logoLink ?? "#";
+    logoLink.target = "_blank";
+    logoLink.rel = "noopener";
+    logoLink.className = "sidebar__logo";
+    const img = document.createElement("img");
+    img.src = config.logoUrl;
+    img.alt = "Commons & Code";
+    logoLink.appendChild(img);
+    sidebarEl.appendChild(logoLink);
+  }
 
   // Case list (a11y primary path, right side).
   const listEl = document.createElement("div");
   listEl.id = "case-list";
   listEl.className = "case-list";
-  app.appendChild(listEl);
+  sidebarEl.appendChild(listEl);
+
+  // Detail panel (hidden; rendering is inline in the list).
+  const detailEl = document.createElement("div");
+  detailEl.id = "detail";
+  detailEl.hidden = true;
+  app.appendChild(detailEl);
 
   // --- Initialise modules ---
   setState({ theme: initialTheme, loading: true });

@@ -116,6 +116,6 @@ export function parseConfig(search: string): AppConfig {
       resolvedImprint || resolvedPrivacy ? true : defaults.showFooter,
     primaryColor: color ?? defaults.primaryColor,
     tiles: tiles && isValidTiles(tiles) ? tiles : defaults.tiles,
-    proposeUrl: sanitiseUrl(proposeUrl),
+    proposeUrl: sanitiseUrl(proposeUrl) ?? defaults.proposeUrl,
   };
 }

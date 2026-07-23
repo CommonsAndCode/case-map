@@ -19,13 +19,12 @@ import {
   setWorkerUrl,
   type Map as MapType,
   type GeoJSONSource,
-  type FilterSpecification,
   type ExpressionSpecification,
 } from "maplibre-gl";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import type { CaseEntry, FilterState, Theme } from "./types.ts";
 import type { CaseFeatureProps } from "./data.ts";
-import { casesToGeoJSON } from "./data.ts";
+import { casesToGeoJSON, filterCasesForMap } from "./data.ts";
 
 setWorkerUrl(workerUrl);
 
@@ -112,8 +111,6 @@ function addCasesLayers(
         200,
         34,
       ],
-      "circle-stroke-width": 2,
-      "circle-stroke-color": cssVar("--app-content-bg"),
       "circle-opacity": 0.85,
     },
   });
@@ -177,38 +174,19 @@ function addCasesLayers(
     },
   });
 
-  applyFilter(map, filter);
+  applyFilter(map, filter, cases);
 }
 
-export function applyFilter(map: MapType, filter: FilterState): void {
-  if (!map.getLayer(UNCLUSTERED_LAYER)) return;
+export function applyFilter(
+  map: MapType,
+  filter: FilterState,
+  allCases: CaseEntry[],
+): void {
+  const source = map.getSource(CASES_SOURCE) as GeoJSONSource | undefined;
+  if (!source) return;
 
-  const conditions: FilterSpecification[] = [["all"]];
-
-  if (filter.ratings.length > 0) {
-    const ratingMatch = [
-      "match",
-      ["get", "rating"],
-      ...filter.ratings,
-      true,
-      false,
-    ] as unknown as FilterSpecification;
-    conditions.push(ratingMatch);
-  }
-
-  if (filter.categories.length > 0) {
-    for (const cat of filter.categories) {
-      conditions.push(
-        ["in", cat, ["get", "categories"]] as unknown as FilterSpecification,
-      );
-    }
-  }
-
-  const f = (conditions.length > 1 ? conditions : null) as FilterSpecification | null;
-  map.setFilter(UNCLUSTERED_LAYER, f);
-  if (map.getLayer(CASE_LABELS_LAYER)) {
-    map.setFilter(CASE_LABELS_LAYER, f);
-  }
+  const filtered = filterCasesForMap(allCases, filter);
+  source.setData(casesToGeoJSON(filtered) as unknown as GeoJSON.GeoJSON);
 }
 
 function wireClickHandlers(
@@ -374,15 +352,14 @@ export function initMap(
         | GeoJSONSource
         | undefined;
       if (source) {
-        source.setData(casesToGeoJSON(nextCases) as unknown as GeoJSON.GeoJSON);
-        applyFilter(map, nextFilter);
+        applyFilter(map, nextFilter, nextCases);
       }
       // If source doesn't exist yet (load not fired), the 'load'
       // handler will add it with latestCases — already updated above.
     },
     setFilter(nextFilter: FilterState) {
       latestFilter = nextFilter;
-      applyFilter(map, nextFilter);
+      applyFilter(map, nextFilter, latestCases);
     },
     setTheme(nextTheme: Theme, _cases: CaseEntry[], _filter: FilterState) {
       map.once("style.load", () => {
