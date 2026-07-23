@@ -156,9 +156,10 @@ function addCasesLayers(
     },
   });
 
-  // Case-title labels (zoom-dependent). Plain dots at low zoom; the dot
-  // grows slightly and a title label appears to the right at high zoom,
-  // so zooming in reveals case names without needing to hover each pin.
+  // Case-title labels (zoom-dependent). Plain dots at low zoom; the title
+  // label appears to the right at higher zoom so zooming in reveals case
+  // names without needing to hover each pin. Labels allow overlap so
+  // densely-placed cases still show their names.
   map.addLayer({
     id: CASE_LABELS_LAYER,
     type: "symbol",
@@ -169,24 +170,23 @@ function addCasesLayers(
       "text-size": 12,
       "text-anchor": "left",
       "text-offset": [0.8, 0],
-      "text-allow-overlap": false,
-      "text-optional": true,
+      "text-allow-overlap": true,
     },
     paint: {
       "text-color": cssVar("--text-color"),
       "text-halo-color": cssVar("--app-content-bg"),
       "text-halo-width": 2,
-      // Fade in above zoom 9, fully visible by zoom 12.
+      // Fade in from zoom 5, fully visible by zoom 7.
       "text-opacity": [
         "interpolate",
         ["linear"],
         ["zoom"],
-        9,
+        5,
         0,
-        10,
-        0.85,
-        12,
-        0.95,
+        6,
+        0.9,
+        7,
+        1,
       ],
     },
   });

@@ -56,11 +56,6 @@ async function main(): Promise<void> {
   controlsEl.className = "controls-overlay controls-overlay--topleft";
   app.appendChild(controlsEl);
 
-  // Filter dropdown (top-right).
-  const filterEl = document.createElement("div");
-  filterEl.className = "controls-overlay controls-overlay--topright";
-  app.appendChild(filterEl);
-
   // Detail panel (right side).
   const detailEl = document.createElement("div");
   detailEl.id = "detail";
@@ -111,7 +106,8 @@ async function main(): Promise<void> {
     list.render(filtered);
   };
 
-  const filterCtl = initFilter(filterEl, onFilterChange);
+  // Mount the filter popover into the case list header.
+  const filterCtl = initFilter(list.headerEl, onFilterChange);
 
   // Initialise the map. WebGL-unavailable → list-only fallback.
   try {
