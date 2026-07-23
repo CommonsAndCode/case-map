@@ -30,7 +30,7 @@
     "lightMode": "Hellmodus aktivieren",
     "darkMode": "Dunkelmodus aktivieren",
     "loadTiles": "Detaillierte Karte laden",
-    "loadTilesHint": "Lädt detaillierte Kartenkacheln von einem externen Drittanbieter-Server (tiles.versatiles.org). Dabei wird Ihre IP-Adresse an diesen Server übertragen. Details finden Sie in der Datenschutzerklärung.",
+    "loadTilesHint": "Lädt detaillierte Kartenkacheln von einem externen Drittanbieter-Server (tiles.versatiles.org). Dabei wird Ihre IP-Adresse an diesen Server übertragen. Details finden Sie in der",
     "tilesLoaded": "Detaillierte Kacheln geladen",
     "rememberChoice": "Diese Auswahl speichern",
     "stopLoadingTiles": "Detaillierte Kacheln nicht mehr laden",

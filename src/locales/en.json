@@ -30,7 +30,7 @@
     "lightMode": "Switch to light mode",
     "darkMode": "Switch to dark mode",
     "loadTiles": "Load detailed map",
-    "loadTilesHint": "Loads detailed map background tiles from an external third-party server (tiles.versatiles.org). Your IP address is transmitted to that server. See the privacy policy for details.",
+    "loadTilesHint": "Loads detailed map background tiles from an external third-party server (tiles.versatiles.org). Your IP address is transmitted to that server. See the",
     "tilesLoaded": "Detailed tiles loaded",
     "rememberChoice": "Remember this choice",
     "stopLoadingTiles": "Stop loading detailed tiles",

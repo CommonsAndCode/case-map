@@ -15,7 +15,6 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   Map,
-  Popup,
   setWorkerUrl,
   type Map as MapType,
   type GeoJSONSource,
@@ -237,30 +236,11 @@ function wireClickHandlers(
     }
   });
 
-  let hoverPopup: Popup | null = null;
-  map.on("mouseenter", UNCLUSTERED_LAYER, (e) => {
+  map.on("mouseenter", UNCLUSTERED_LAYER, () => {
     map.getCanvas().style.cursor = "pointer";
-    const feature = e.features?.[0] as unknown as
-      | { geometry: GeoJSON.Point; properties: CaseFeatureProps }
-      | undefined;
-    if (!feature?.properties?.caseId) return;
-    const coords = feature.geometry.coordinates as [number, number];
-    const title = feature.properties.title;
-    const short = feature.properties.short;
-    const html = `<strong>${escapeHtml(title)}</strong>${
-      short ? `<div style="margin-top:2px;font-size:13px">${escapeHtml(short)}</div>` : ""
-    }`;
-    hoverPopup = new Popup({ closeButton: false, closeOnClick: false, offset: 12 })
-      .setLngLat(coords)
-      .setHTML(html)
-      .addTo(map);
   });
   map.on("mouseleave", UNCLUSTERED_LAYER, () => {
     map.getCanvas().style.cursor = "";
-    if (hoverPopup) {
-      hoverPopup.remove();
-      hoverPopup = null;
-    }
   });
 
   map.on("mouseenter", CLUSTERS_LAYER, () => {
@@ -269,14 +249,6 @@ function wireClickHandlers(
   map.on("mouseleave", CLUSTERS_LAYER, () => {
     map.getCanvas().style.cursor = "";
   });
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 export interface MapController {

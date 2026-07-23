@@ -116,9 +116,10 @@ export function initControls(
       link.target = "_blank";
       link.rel = "noopener";
       link.textContent = t("privacy");
+      const suffix = __LANG__ === "de" ? " für Details." : " for details.";
       promptHint.append(t("loadTilesHint"), " ");
       promptHint.appendChild(link);
-      promptHint.appendChild(document.createTextNode("."));
+      promptHint.appendChild(document.createTextNode(suffix));
     } else {
       promptHint.textContent = t("loadTilesHint");
     }

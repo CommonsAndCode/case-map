@@ -276,6 +276,11 @@ html[data-theme="dark"] .control-btn--propose {
 }
 .control-btn--propose:hover {
   opacity: 0.9;
+  background: var(--cc-primary);
+}
+.control-btn--propose:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
 }
 
 /* --- Floating privacy/imprint links (bottom-left of map) --- */
