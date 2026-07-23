@@ -48,20 +48,20 @@
     "oneCase": "1 case study"
   },
   "categories": {
-    "digitalization": { "de": "Digitalisierung", "en": "Digitalization" },
-    "citizen-services": { "de": "Bürgerdienste", "en": "Citizen services" },
-    "civil-rights": { "de": "Freiheitsrechte", "en": "Civil rights" },
-    "smart-city": { "de": "Smart City", "en": "Smart city" },
-    "open-data": { "de": "Open Data", "en": "Open data" },
-    "transparency": { "de": "Transparenz", "en": "Transparency" },
-    "civic-participation": { "de": "Bürgerbeteiligung", "en": "Civic participation" },
-    "open-source": { "de": "Open Source", "en": "Open source" },
-    "ai": { "de": "KI", "en": "AI" },
-    "data-protection": { "de": "Datenschutz", "en": "Data protection" },
-    "digital-infrastructure": { "de": "Digitale Infrastruktur", "en": "Digital infrastructure" },
-    "surveillance": { "de": "Überwachung", "en": "Surveillance" },
-    "transport": { "de": "Verkehr", "en": "Transport" },
-    "health": { "de": "Gesundheit", "en": "Health" },
-    "education": { "de": "Bildung", "en": "Education" }
+    "digitalization": "Digitalization",
+    "citizen-services": "Citizen services",
+    "civil-rights": "Civil rights",
+    "smart-city": "Smart city",
+    "open-data": "Open data",
+    "transparency": "Transparency",
+    "civic-participation": "Civic participation",
+    "open-source": "Open source",
+    "ai": "AI",
+    "data-protection": "Data protection",
+    "digital-infrastructure": "Digital infrastructure",
+    "surveillance": "Surveillance",
+    "transport": "Transport",
+    "health": "Health",
+    "education": "Education"
   }
 }

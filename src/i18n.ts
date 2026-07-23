@@ -16,8 +16,7 @@ export function t(key: string, vars?: Record<string, string | number>): string {
 
 /** Localise a category slug → label for the current build language. */
 export function tCategory(slug: string): string {
-  const map = __LOCALE__.categories;
-  return map[slug]?.[__LANG__] ?? slug;
+  return __LOCALE__.categories[slug] ?? slug;
 }
 
 /** Localise a rating key → label for the current build language. */

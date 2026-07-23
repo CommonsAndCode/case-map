@@ -211,7 +211,6 @@ html[data-theme="dark"] .sidebar__logo img {
   top: 0;
   left: 0;
   bottom: 0;
-  /* Width matches sidebar; controls only float over the map area. */
   right: 340px;
   z-index: 500;
 }
@@ -227,6 +226,7 @@ html[data-theme="dark"] .sidebar__logo img {
 .floating-controls {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
   background: var(--overlay-bg);
   backdrop-filter: blur(8px);
@@ -234,11 +234,6 @@ html[data-theme="dark"] .sidebar__logo img {
   border-radius: 8px;
   padding: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-.floating-controls--topleft {
-  position: absolute;
-  top: 10px;
-  left: 10px;
 }
 .floating-controls--topright {
   position: absolute;
@@ -267,9 +262,20 @@ html[data-theme="dark"] .sidebar__logo img {
   outline-offset: 2px;
 }
 .control-btn--propose {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1;
+  background: var(--cc-primary);
+  color: var(--text-inverse-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+html[data-theme="dark"] .control-btn--propose {
+  color: #000;
+}
+.control-btn--propose:hover {
+  opacity: 0.9;
 }
 
 /* --- Floating privacy/imprint links (bottom-left of map) --- */

@@ -1,13 +1,8 @@
 // Controls — map UI buttons and the "load detailed tiles" consent dialog.
 //
-// Three floating overlays on the map:
-// 1. Top-left: theme toggle + recenter.
-// 2. Top-right: propose-a-case (+) link.
-// 3. Centered: "load detailed tiles" consent dialog (until opted in).
-//
-// The consent dialog explains that loading detailed tiles fetches data
-// from a third-party server (tiles.versatiles.org), links to the privacy
-// policy, has a "remember" checkbox, and an X close button.
+// Floating overlays on the map:
+// 1. Top-right: propose-a-case (+) primary CTA, theme toggle, recenter.
+// 2. Centered: "load detailed tiles" consent dialog (until opted in).
 
 import type { AppConfig, Theme } from "./types.ts";
 import { t } from "./i18n.ts";
@@ -30,13 +25,30 @@ export function initControls(
 ): ControlsController {
   container.className = "controls-root";
 
-  // --- Top-left: theme toggle + recenter ---
-  const topleft = document.createElement("div");
-  topleft.className = "floating-controls floating-controls--topleft";
-  topleft.setAttribute("role", "group");
-  topleft.setAttribute("aria-label", t("appTitle"));
-  container.appendChild(topleft);
+  // --- Top-right control group ---
+  const topRight = document.createElement("div");
+  topRight.className = "floating-controls floating-controls--topright";
+  topRight.setAttribute("role", "group");
+  topRight.setAttribute("aria-label", t("appTitle"));
+  container.appendChild(topRight);
 
+  // Propose-a-case (+) — primary CTA, highlighted.
+  const proposeUrl = config.proposeUrl
+    ? sanitiseUrl(config.proposeUrl)
+    : null;
+  if (proposeUrl) {
+    const proposeLink = document.createElement("a");
+    proposeLink.href = proposeUrl;
+    proposeLink.target = "_blank";
+    proposeLink.rel = "noopener";
+    proposeLink.className = "control-btn control-btn--propose";
+    proposeLink.textContent = "+";
+    proposeLink.setAttribute("aria-label", t("proposeCase"));
+    proposeLink.title = t("proposeCase");
+    topRight.appendChild(proposeLink);
+  }
+
+  // Theme toggle.
   let currentTheme = theme;
   const themeBtn = document.createElement("button");
   themeBtn.type = "button";
@@ -57,7 +69,9 @@ export function initControls(
     onThemeChange(currentTheme);
   });
   updateThemeBtn();
+  if (config.showThemeToggle) topRight.appendChild(themeBtn);
 
+  // Recenter.
   const recenterBtn = document.createElement("button");
   recenterBtn.type = "button";
   recenterBtn.className = "control-btn";
@@ -65,29 +79,7 @@ export function initControls(
   recenterBtn.setAttribute("aria-label", t("recenter"));
   recenterBtn.title = t("recenter");
   recenterBtn.addEventListener("click", () => mapController.recenter());
-
-  if (config.showThemeToggle) topleft.appendChild(themeBtn);
-  topleft.appendChild(recenterBtn);
-
-  // --- Top-right: propose-a-case (+) link ---
-  const proposeUrl = config.proposeUrl
-    ? sanitiseUrl(config.proposeUrl)
-    : null;
-  if (proposeUrl) {
-    const topright = document.createElement("div");
-    topright.className = "floating-controls floating-controls--topright";
-    container.appendChild(topright);
-
-    const proposeLink = document.createElement("a");
-    proposeLink.href = proposeUrl;
-    proposeLink.target = "_blank";
-    proposeLink.rel = "noopener";
-    proposeLink.className = "control-btn control-btn--propose";
-    proposeLink.textContent = "+";
-    proposeLink.setAttribute("aria-label", t("proposeCase"));
-    proposeLink.title = t("proposeCase");
-    topright.appendChild(proposeLink);
-  }
+  topRight.appendChild(recenterBtn);
 
   // --- Centered: "load detailed tiles" consent dialog ---
   let tilesPrompt: HTMLElement | null = null;
@@ -115,7 +107,6 @@ export function initControls(
     const promptHint = document.createElement("p");
     promptHint.className = "tiles-prompt__hint";
 
-    // Hint text with an inline privacy-policy link.
     const safePrivacy = config.privacyUrl
       ? sanitiseUrl(config.privacyUrl)
       : null;
@@ -126,10 +117,8 @@ export function initControls(
       link.rel = "noopener";
       link.textContent = t("privacy");
       promptHint.append(t("loadTilesHint"), " ");
-      const before = promptHint.lastChild;
       promptHint.appendChild(link);
       promptHint.appendChild(document.createTextNode("."));
-      void before;
     } else {
       promptHint.textContent = t("loadTilesHint");
     }

@@ -7,5 +7,5 @@ declare const __LOCALE__: Locale;
 // Shape of the locale files in src/locales/{de,en}.json
 interface Locale {
   strings: Record<string, string>;
-  categories: Record<string, { de: string; en: string }>;
+  categories: Record<string, string>;
 }
