@@ -77,7 +77,7 @@ function hashToFloat(s: string): number {
 function jitterColocated(
   points: { coords: [number, number]; caseId: string; locIndex: number }[],
 ): [number, number][] {
-  const OFFSET = 0.003;
+  const OFFSET = 0.005;
 
   const groups = new Map<string, number[]>();
   for (let i = 0; i < points.length; i++) {
@@ -97,7 +97,7 @@ function jitterColocated(
     for (const idx of indices) {
       const seed = `${points[idx].caseId}:${points[idx].locIndex}`;
       const angle = hashToFloat(seed) * 2 * Math.PI;
-      const dist = 0.5 + hashToFloat(seed + ":r") * 0.5;
+      const dist = 0.6 + hashToFloat(seed + ":r") * 0.4;
       result[idx][0] += Math.cos(angle) * OFFSET * dist;
       result[idx][1] += Math.sin(angle) * OFFSET * dist;
     }

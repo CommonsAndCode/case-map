@@ -210,11 +210,12 @@ export function initList(
   return { render, setActive, headerEl: filterMount };
 }
 
-/** Format an ISO date string as a localized human-readable date. */
+/** Format an ISO date string as a European-format human-readable date. */
 function formatDate(iso: string): string {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString(__LANG__, {
+  const locale = __LANG__ === "de" ? "de-DE" : "en-GB";
+  return d.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
