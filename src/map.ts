@@ -42,6 +42,7 @@ const CASES_SOURCE = "cc-cases";
 const CLUSTERS_LAYER = "cc-clusters";
 const CLUSTER_COUNT_LAYER = "cc-cluster-count";
 const UNCLUSTERED_LAYER = "cc-unclustered-points";
+const CASE_LABELS_LAYER = "cc-case-labels";
 
 // Rating → CSS custom property name. Resolved at runtime via
 // getComputedStyle so dark-mode overrides apply. MapLibre expressions
@@ -154,6 +155,41 @@ function addCasesLayers(
     },
   });
 
+  // Case-title labels (zoom-dependent). Plain dots at low zoom; the dot
+  // grows slightly and a title label appears to the right at high zoom,
+  // so zooming in reveals case names without needing to hover each pin.
+  map.addLayer({
+    id: CASE_LABELS_LAYER,
+    type: "symbol",
+    source: CASES_SOURCE,
+    filter: ["!", ["has", "point_count"]],
+    layout: {
+      "text-field": ["get", "title"],
+      "text-size": 12,
+      "text-anchor": "left",
+      "text-offset": [0.8, 0],
+      "text-allow-overlap": false,
+      "text-optional": true,
+    },
+    paint: {
+      "text-color": cssVar("--text-color"),
+      "text-halo-color": cssVar("--app-content-bg"),
+      "text-halo-width": 2,
+      // Fade in above zoom 9, fully visible by zoom 12.
+      "text-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        9,
+        0,
+        10,
+        0.85,
+        12,
+        0.95,
+      ],
+    },
+  });
+
   applyFilter(map, filter);
 }
 
@@ -184,11 +220,12 @@ export function applyFilter(map: MapType, filter: FilterState): void {
     }
   }
 
-  // Clusters always pass the filter; only unclustered points are filtered.
-  map.setFilter(
-    UNCLUSTERED_LAYER,
-    (conditions.length > 1 ? conditions : null) as FilterSpecification | null,
-  );
+  // Clusters always pass the filter; only unclustered points + labels are filtered.
+  const f = (conditions.length > 1 ? conditions : null) as FilterSpecification | null;
+  map.setFilter(UNCLUSTERED_LAYER, f);
+  if (map.getLayer(CASE_LABELS_LAYER)) {
+    map.setFilter(CASE_LABELS_LAYER, f);
+  }
 }
 
 /**
