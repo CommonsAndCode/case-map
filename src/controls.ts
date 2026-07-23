@@ -126,6 +126,9 @@ export function initControls(
     mapController.loadTiles();
     if (rememberCheckbox.checked) {
       localStorage.setItem(TILES_STORAGE_KEY, "granted");
+    } else {
+      // Explicitly clear any stale consent so next visit asks again.
+      localStorage.removeItem(TILES_STORAGE_KEY);
     }
     setTilesLoaded(true);
     onTilesLoad();
