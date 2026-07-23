@@ -91,6 +91,9 @@ export function initControls(
     tilesPrompt.setAttribute("aria-modal", "false");
     tilesPrompt.setAttribute("aria-labelledby", "tiles-prompt-title");
 
+    // Don't show the dialog if the visitor already remembered consent.
+    if (tilesConsentRemembered()) tilesPrompt.hidden = true;
+
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "tiles-prompt__close";
