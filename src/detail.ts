@@ -25,10 +25,9 @@ export function initDetail(
 ): DetailController {
   container.setAttribute("role", "dialog");
   container.setAttribute("aria-modal", "false");
-  container.setAttribute("aria-label", t("caseList"));
+  container.setAttribute("aria-label", t("caseDetails"));
   container.classList.add("detail-panel");
   container.hidden = true;
-
   let lastTrigger: HTMLElement | null = null;
 
   function open(entry: CaseEntry, triggerEl?: HTMLElement): void {
