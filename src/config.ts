@@ -1,54 +1,15 @@
-/** Application configuration parsed from URL query parameters. */
-export interface AppConfig {
-  /** Operating mode. "standalone" shows full chrome; "embed" hides it. */
-  mode: "standalone" | "embed";
+// Parse application configuration from URL query parameters.
+// Config is read once on load and never changes.
 
-  /** URL to fetch cases.json from. */
-  dataUrl: string;
-
-  /** Override UI language. null = browser detection. */
-  lang: "de" | "en" | null;
-
-  /** Override theme. null = system preference / localStorage. */
-  theme: "light" | "dark" | null;
-
-  /** Whether to show the dark/light toggle button. */
-  showThemeToggle: boolean;
-
-  /** Whether to show the language toggle button. */
-  showLanguageToggle: boolean;
-
-  /** Whether to show the logo in the info panel. */
-  showLogo: boolean;
-
-  /** Logo image URL. null = no logo. */
-  logoUrl: string | null;
-
-  /** Logo click target URL. null = no link. */
-  logoLink: string | null;
-
-  /** Imprint page URL. null = no link. */
-  imprintUrl: string | null;
-
-  /** Privacy page URL. null = no link. */
-  privacyUrl: string | null;
-
-  /** Whether to show the footer. */
-  showFooter: boolean;
-
-  /** CSS colour override for the primary/accent colour. */
-  primaryColor: string | null;
-}
+import type { AppConfig, Theme } from "./types.ts";
 
 const BASE_URL = import.meta.env.BASE_URL;
 
 const STANDALONE_DEFAULTS: AppConfig = {
   mode: "standalone",
   dataUrl: `${BASE_URL}data/cases.json`,
-  lang: null,
   theme: null,
   showThemeToggle: true,
-  showLanguageToggle: true,
   showLogo: true,
   logoUrl: `${BASE_URL}img/logo.svg`,
   logoLink: "https://commons-and-code.eu",
@@ -56,15 +17,15 @@ const STANDALONE_DEFAULTS: AppConfig = {
   privacyUrl: "https://commons-and-code.eu/en/legal/privacy/",
   showFooter: true,
   primaryColor: null,
+  tiles: "ask",
+  proposeUrl: "https://hub.commons-and-code.eu/apps/forms/s/zWaDHQ728cPJYDbDgBXmmq4F",
 };
 
 const EMBED_DEFAULTS: AppConfig = {
   mode: "embed",
   dataUrl: `${BASE_URL}data/cases.json`,
-  lang: null,
   theme: null,
   showThemeToggle: false,
-  showLanguageToggle: true,
   showLogo: false,
   logoUrl: null,
   logoLink: null,
@@ -72,6 +33,8 @@ const EMBED_DEFAULTS: AppConfig = {
   privacyUrl: null,
   showFooter: false,
   primaryColor: null,
+  tiles: "off",
+  proposeUrl: null,
 };
 
 /**
@@ -83,25 +46,26 @@ export function sanitiseUrl(url: string | null): string | null {
   const trimmed = url.trim();
   if (!trimmed) return null;
 
-  // Relative URLs (including protocol-relative) are safe
+  // Relative URLs (including protocol-relative) are safe.
   if (trimmed.startsWith("/") || trimmed.startsWith(".")) return trimmed;
 
   try {
     const parsed = new URL(trimmed, window.location.href);
-    if (parsed.protocol === "http:" || parsed.protocol === "https:") return trimmed;
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return trimmed;
+    }
   } catch {
-    // Malformed URL — reject
+    // Malformed URL — reject.
   }
-
   return null;
 }
 
-function isValidLang(v: string): v is "de" | "en" {
-  return v === "de" || v === "en";
+function isValidTheme(v: string): v is Theme {
+  return v === "light" || v === "dark";
 }
 
-function isValidTheme(v: string): v is "light" | "dark" {
-  return v === "light" || v === "dark";
+function isValidTiles(v: string): v is AppConfig["tiles"] {
+  return v === "on" || v === "off" || v === "ask";
 }
 
 /**
@@ -110,20 +74,20 @@ function isValidTheme(v: string): v is "light" | "dark" {
  * Supported parameters:
  * - mode        "standalone" | "embed" (default: "standalone")
  * - dataUrl     URL to fetch cases.json from
- * - lang        "de" | "en"
  * - theme       "light" | "dark"
  * - logo        Logo image URL (implies showLogo=true)
  * - logoLink    Logo click target URL
  * - imprintUrl  Imprint page URL (implies showFooter=true)
  * - privacyUrl  Privacy page URL (implies showFooter=true)
  * - color       CSS colour value for primary accent
+ * - tiles       "on" | "off" | "ask" (external VersaTiles loading)
+ * - proposeUrl  "Propose a case" link URL
  */
 export function parseConfig(search: string): AppConfig {
   const params = new URLSearchParams(search);
   const mode = params.get("mode") === "embed" ? "embed" : "standalone";
   const defaults = mode === "embed" ? EMBED_DEFAULTS : STANDALONE_DEFAULTS;
 
-  const lang = params.get("lang");
   const theme = params.get("theme");
   const dataUrl = params.get("dataUrl");
   const logo = params.get("logo");
@@ -131,8 +95,9 @@ export function parseConfig(search: string): AppConfig {
   const imprintUrl = params.get("imprintUrl");
   const privacyUrl = params.get("privacyUrl");
   const color = params.get("color");
+  const tiles = params.get("tiles");
+  const proposeUrl = params.get("proposeUrl");
 
-  const resolvedLang = lang && isValidLang(lang) ? lang : defaults.lang;
   const resolvedLogo = logo ?? defaults.logoUrl;
   const resolvedImprint = sanitiseUrl(imprintUrl) ?? defaults.imprintUrl;
   const resolvedPrivacy = sanitiseUrl(privacyUrl) ?? defaults.privacyUrl;
@@ -140,16 +105,17 @@ export function parseConfig(search: string): AppConfig {
   return {
     mode,
     dataUrl: sanitiseUrl(dataUrl) ?? defaults.dataUrl,
-    lang: resolvedLang,
     theme: theme && isValidTheme(theme) ? theme : defaults.theme,
     showThemeToggle: defaults.showThemeToggle,
-    showLanguageToggle: !resolvedLang,
     showLogo: logo ? true : defaults.showLogo,
     logoUrl: sanitiseUrl(resolvedLogo),
     logoLink: sanitiseUrl(logoLink) ?? defaults.logoLink,
     imprintUrl: resolvedImprint,
     privacyUrl: resolvedPrivacy,
-    showFooter: resolvedImprint || resolvedPrivacy ? true : defaults.showFooter,
+    showFooter:
+      resolvedImprint || resolvedPrivacy ? true : defaults.showFooter,
     primaryColor: color ?? defaults.primaryColor,
+    tiles: tiles && isValidTiles(tiles) ? tiles : defaults.tiles,
+    proposeUrl: sanitiseUrl(proposeUrl) ?? defaults.proposeUrl,
   };
 }

@@ -51,7 +51,7 @@ The app is configured entirely via URL query parameters — no server state.
 | `logoLink` | Logo click target | `commons-and-code.eu` | none |
 | `imprintUrl` | Imprint link | Commons & Code imprint | none |
 | `privacyUrl` | Privacy policy link | Commons & Code privacy | none |
-| `proposeUrl` | "Propose a case" link (Phase 2) | none | none |
+| `proposeUrl` | "Propose a case" link URL | Commons & Code form | none |
 | `tiles` | `on` to load external VersaTiles; otherwise the bundled basemap is used | `ask` | `off` |
 
 ## Data format
@@ -87,6 +87,26 @@ when the visitor explicitly opts in (via the "Load detailed map tiles"
 control, or when an embedder passes `&tiles=on`). This keeps the "no
 cookies, static site" promise intact until the user chooses to load
 detailed tiles. See the website privacy policy for the full disclosure.
+
+## Embedding
+
+Embed the case map in an iframe on another site. Example for the English
+build with detailed tiles pre-enabled:
+
+```html
+<iframe
+  src="https://map.commons-and-code.eu/en/?mode=embed&tiles=on&dataUrl=https://map.commons-and-code.eu/data/cases.json"
+  width="100%"
+  height="600"
+  style="border:0;"
+  loading="lazy"
+  title="Commons & Code — Case studies map"
+></iframe>
+```
+
+For the German build, use `/de/?mode=embed&tiles=on`. If you prefer the
+privacy-first fallback basemap (no third-party tile server), omit
+`&tiles=on` — visitors will see a "Load detailed map" prompt instead.
 
 ## License
 

@@ -1,8 +1,8 @@
 [
   {
     "categories": [
-      "digitalisierung",
-      "buergerdienste"
+      "digitalization",
+      "citizen-services"
     ],
     "id": "helsinki-digital-service",
     "lang": "de",
@@ -21,9 +21,9 @@
   },
   {
     "categories": [
-      "ki",
-      "digitalisierung",
-      "buergerdienste"
+      "ai",
+      "digitalization",
+      "citizen-services"
     ],
     "id": "test-ki-verwaltung-hamburg",
     "lang": "de",
@@ -42,7 +42,7 @@
   },
   {
     "categories": [
-      "freiheitsrechte"
+      "civil-rights"
     ],
     "id": "kameras-stoppen",
     "lang": "de",
@@ -63,7 +63,7 @@
     "categories": [
       "smart-city",
       "open-data",
-      "transparenz"
+      "transparency"
     ],
     "id": "test-smart-city-dashboard-wien",
     "lang": "de",
@@ -82,8 +82,8 @@
   },
   {
     "categories": [
-      "buergerbeteiligung",
-      "transparenz"
+      "civic-participation",
+      "transparency"
     ],
     "id": "test-buergerhaushalt-muenster",
     "lang": "de",
@@ -103,7 +103,7 @@
   {
     "categories": [
       "open-data",
-      "verkehr",
+      "transport",
       "open-source"
     ],
     "id": "test-osm-radwege-berlin",
@@ -124,8 +124,8 @@
   {
     "categories": [
       "open-data",
-      "transparenz",
-      "digitalisierung"
+      "transparency",
+      "digitalization"
     ],
     "id": "test-open-data-portal-nrw",
     "lang": "de",
@@ -154,9 +154,9 @@
   },
   {
     "categories": [
-      "datenschutz",
-      "gesundheit",
-      "digitalisierung"
+      "data-protection",
+      "health",
+      "digitalization"
     ],
     "id": "test-gesundheitsapp-datenleck",
     "lang": "de",
@@ -175,7 +175,7 @@
   },
   {
     "categories": [
-      "transparenz",
+      "transparency",
       "open-data"
     ],
     "id": "test-transparenzportal-hh",
@@ -195,8 +195,8 @@
   },
   {
     "categories": [
-      "digitale-infrastruktur",
-      "buergerbeteiligung"
+      "digital-infrastructure",
+      "civic-participation"
     ],
     "id": "test-freifunk-community-mesh",
     "lang": "de",
@@ -230,9 +230,9 @@
   },
   {
     "categories": [
-      "ueberwachung",
-      "ki",
-      "freiheitsrechte"
+      "surveillance",
+      "ai",
+      "civil-rights"
     ],
     "id": "test-ueberwachung-algorithmus-koeln",
     "lang": "de",
@@ -256,9 +256,9 @@
   },
   {
     "categories": [
-      "bildung",
+      "education",
       "open-source",
-      "digitalisierung"
+      "digitalization"
     ],
     "id": "test-schuldigitalisierung-bw",
     "lang": "de",
@@ -289,7 +289,7 @@
     "categories": [
       "smart-city",
       "open-data",
-      "digitale-infrastruktur"
+      "digital-infrastructure"
     ],
     "id": "test-lora-sensornetz-zuerich",
     "lang": "de",
@@ -308,7 +308,7 @@
   },
   {
     "categories": [
-      "digitalisierung",
+      "digitalization",
       "smart-city"
     ],
     "id": "test-cluster-ruhrgebiet",
@@ -353,7 +353,7 @@
   },
   {
     "categories": [
-      "digitalisierung"
+      "digitalization"
     ],
     "id": "test-eakte-gescheitert",
     "lang": "de",
@@ -372,9 +372,9 @@
   },
   {
     "categories": [
-      "buergerbeteiligung",
+      "civic-participation",
       "open-source",
-      "transparenz"
+      "transparency"
     ],
     "id": "test-barcelona-decidim",
     "lang": "en",
@@ -393,9 +393,9 @@
   },
   {
     "categories": [
-      "digitalisierung",
+      "digitalization",
       "open-source",
-      "buergerdienste"
+      "citizen-services"
     ],
     "id": "test-e-government-tallinn",
     "lang": "en",
@@ -414,9 +414,9 @@
   },
   {
     "categories": [
-      "freiheitsrechte",
-      "ueberwachung",
-      "datenschutz"
+      "civil-rights",
+      "surveillance",
+      "data-protection"
     ],
     "id": "test-facial-recognition-ban-amsterdam",
     "lang": "en",
